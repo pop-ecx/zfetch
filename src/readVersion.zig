@@ -15,6 +15,7 @@ pub fn get_os() !void {
 
         // Process the read data here
         // For example, you can print it to stdout
-        std.debug.print("{s}", .{buffer[0..bytesRead]});
+        //std.debug.print("{s}", .{buffer[0..bytesRead]});
+        std.debug.print("\nDistro:{s}", .{buffer[165..bytesRead]});
     }
 }
