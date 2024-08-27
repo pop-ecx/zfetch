@@ -15,6 +15,6 @@ pub fn get_uptime() !void {
 
         // Process the read data here
         // For example, you can print it to stdout
-        std.debug.print("{s}", .{buffer[0..bytesRead]});
+        std.debug.print("Uptime: {s}", .{buffer[0..bytesRead]});
     }
 }
