@@ -19,7 +19,7 @@ pub fn main() !void {
     defer allocator.free(memory_info);
     const storage_info = try system.executeCommand(allocator, &[_][]const u8{ "df", "-h" });
     defer allocator.free(storage_info);
-    const desktop_env = std.os.getenv("XDG_CURRENT_DESKTOP") orelse "Unknown";
+    const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse "Unknown";
     const kernel_version = try system.executeCommand(allocator, &[_][]const u8{ "uname", "-r" });
     defer allocator.free(kernel_version);
 
