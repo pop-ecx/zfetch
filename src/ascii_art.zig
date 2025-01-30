@@ -21,7 +21,8 @@ pub fn printNeofetchStyle(
 
     // Print additional system info below the logo
     std.debug.print("\n{s:<30} Desktop Environment: {s}\n", .{ "", desktop_env });
-    std.debug.print("{s:<30} Kernel Version: {s}\n", .{ "", kernel_version });
+    std.debug.print("{s:<30} Kernel Version: {s}", .{ "", kernel_version });
+    std.debug.print("{s:<30} Distro: {s}\n", .{ "", distro_name });
     std.debug.print("{s:<30} Storage:\n", .{""});
 
     // Print storage info
@@ -32,6 +33,9 @@ pub fn printNeofetchStyle(
 }
 
 fn getDistroLogo(distro_name: []const u8) []const u8 {
+    // Normalize the distro name (e.g., extract "Parrot" from "Parrot Security")
+    const normalized_name = normalizeDistroName(distro_name);
+
     const logos = std.ComptimeStringMap([]const u8, .{
         .{
             "Arch",
@@ -85,13 +89,22 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
         },
     });
 
-    return logos.get(distro_name) orelse
+    // Use the normalized name to look up the logo
+    return logos.get(normalized_name) orelse
         \\      .--.      
-        \\     |o_o |     Unknown Distro
-        \\     |:_/ |     
+        \\     |o_o |     
+        \\     |:_/ |             Generic  
         \\    //   \ \    
         \\   (|     | )   
         \\  /'\_   _/`\   
-        \\  \___)=(___/  
+        \\  \___)=(___/
     ;
+}
+
+fn normalizeDistroName(distro_name: []const u8) []const u8 {
+    // Normalize the distro name by extracting the first word (e.g., "Parrot" from "Parrot Security")
+    if (std.mem.indexOf(u8, distro_name, " ")) |space_index| {
+        return distro_name[0..space_index];
+    }
+    return distro_name;
 }
