@@ -11,14 +11,6 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     const distro_name = try distro.parseDistroName(allocator, distro_info);
     defer allocator.free(distro_name);
 
-    // Get memory information
-    const memory_info = try executeCommand(allocator, &[_][]const u8{ "free", "-h" });
-    defer allocator.free(memory_info);
-
-    // Get storage space information
-    const storage_info = try executeCommand(allocator, &[_][]const u8{ "df", "-h" });
-    defer allocator.free(storage_info);
-
     // Get desktop environment
     const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse "Unknown";
 
