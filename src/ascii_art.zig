@@ -34,7 +34,7 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
             "Arch",
             \\       /\\
             \\      /  \\
-            \\     /\\   \\      Arch Linux
+            \\     /\\   \\      
             \\    /      \\
             \\   /   ,,   \\
             \\  /   |  |  -\\
@@ -45,7 +45,7 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
             "Ubuntu",
             \\          _
             \\      ---(_)
-            \\     _/  ---  \\      Ubuntu
+            \\     _/  ---  \\      
             \\    (_) |   |  |
             \\      \\  --- _/
             \\       ---(_)
@@ -54,7 +54,7 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
         .{
             "Debian",
             \\     _____
-            \\  /  ___  \\      Debian
+            \\  /  ___  \\      
             \\ |  /   \\  |
             \\ | |     | |
             \\  \\_____/  |
@@ -64,7 +64,7 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
         .{
             "Fedora",
             \\      _____
-            \\     /   __)\\      Fedora
+            \\     /   __)\\      
             \\     |  /  \\ \\
             \\  ___|  |  / /
             \\ / (_/    \\_/
@@ -74,7 +74,7 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
         .{
             "Parrot",
             \\     _____
-            \\   /  ___  \\      Parrot OS
+            \\  /  ___  \\      
             \\  |  \\_/  |
             \\  |   _   |
             \\   \\_____/
@@ -86,7 +86,7 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
     return logos.get(normalized_name) orelse
         \\      .--.      
         \\     |o_o |     
-        \\     |:_/ |             Generic  
+        \\     |:_/ |             
         \\    //   \ \    
         \\   (|     | )   
         \\  /'\_   _/`\   
