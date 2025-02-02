@@ -2,33 +2,26 @@ const std = @import("std");
 
 pub fn printNeofetchStyle(
     distro_name: []const u8,
-    memory_info: []const u8,
-    storage_info: []const u8,
     desktop_env: []const u8,
     kernel_version: []const u8,
+    uptime: []const u8,
+    shell_version: []const u8,
 ) !void {
     const logo = getDistroLogo(distro_name);
 
-    // Split the logo and system info into lines
+    // Split the logo into lines
     var logo_lines = std.mem.split(u8, logo, "\n");
-    var memory_lines = std.mem.split(u8, memory_info, "\n");
 
-    // Print the logo and memory info side by side
+    // Print the logo and system info side by side
+    std.debug.print("{s:<30} DE/WM: {s}\n", .{ logo_lines.next().?, desktop_env });
+    std.debug.print("{s:<30} Kernel Version: {s}", .{ logo_lines.next().?, kernel_version });
+    std.debug.print("{s:<30} Distro: {s}\n", .{ logo_lines.next().?, distro_name });
+    std.debug.print("{s:<30} Uptime: {s}", .{ logo_lines.next().?, uptime });
+    std.debug.print("{s:<30} Shell: {s}\n", .{ logo_lines.next().?, shell_version });
+
+    // Print the remaining lines of the logo (if any)
     while (logo_lines.next()) |logo_line| {
-        const memory_line = memory_lines.next() orelse "";
-        std.debug.print("{s:<30} {s}\n", .{ logo_line, memory_line });
-    }
-
-    // Print additional system info below the logo
-    std.debug.print("\n{s:<30} Desktop Environment: {s}\n", .{ "", desktop_env });
-    std.debug.print("{s:<30} Kernel Version: {s}", .{ "", kernel_version });
-    std.debug.print("{s:<30} Distro: {s}\n", .{ "", distro_name });
-    std.debug.print("{s:<30} Storage:\n", .{""});
-
-    // Print storage info
-    var storage_lines = std.mem.split(u8, storage_info, "\n");
-    while (storage_lines.next()) |storage_line| {
-        std.debug.print("{s:<30} {s}\n", .{ "", storage_line });
+        std.debug.print("{s}\n", .{logo_line});
     }
 }
 
