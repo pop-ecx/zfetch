@@ -16,10 +16,11 @@ pub fn main() !void {
 
     // Get system information
     const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse "Unknown";
-    const kernel_version = try system.executeCommand(allocator, &[_][]const u8{ "uname", "-r" });
 
-    const shell_version = std.os.getenv("BASH_VERSION") orelse std.os.getenv("ZSH_VERSION") orelse "Unknown";
+    const kernel_version = try system.executeCommand(allocator, &[_][]const u8{ "uname", "-r" });
     defer allocator.free(kernel_version);
+
+    const shell_version = try system.getShellVersion(allocator);
 
     const uptime = try system.executeCommand(allocator, &[_][]const u8{ "uptime", "-p" });
     defer allocator.free(uptime);

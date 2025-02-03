@@ -22,11 +22,52 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     const uptime = try getUptime(allocator);
     defer allocator.free(uptime);
 
-    //Get bash/zsh version
-    const shell_version = std.os.getenv("BASH_VERSION") orelse std.os.getenv("ZSH_VERSION") orelse "Unknown";
+    //Get bash/zsh/fish version
+    const shell_version = try getShellVersion(allocator);
+    defer allocator.free(shell_version);
 
     // Print ASCII art and system info in Neofetch style
     try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version);
+}
+
+pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
+    // Get the current shell from the SHELL environment variable
+    const shell_path = std.os.getenv("SHELL") orelse return try allocator.dupe(u8, "Unknown");
+
+    // Extract the shell name (e.g., "bash" or "zsh") from the path
+    const shell_name = std.fs.path.basename(shell_path);
+
+    const shell_version_output = try executeCommand(allocator, &[_][]const u8{ shell_name, "--version" });
+    defer allocator.free(shell_version_output);
+
+    // Parse the version from the output
+    const shell_version = try parseShellVersion(allocator, shell_name, shell_version_output);
+    return shell_version;
+}
+
+fn parseShellVersion(allocator: std.mem.Allocator, shell_name: []const u8, output: []const u8) ![]u8 {
+    if (std.mem.eql(u8, shell_name, "bash")) {
+        // Example output: "GNU bash, version 5.2.15(1)-release (x86_64-pc-linux-gnu)"
+        if (std.mem.indexOf(u8, output, "version")) |version_index| {
+            const version_start = version_index + "version ".len;
+            if (std.mem.indexOf(u8, output[version_start..], " ")) |space_index| {
+                const version = output[version_start .. version_start + space_index];
+                return try std.fmt.allocPrint(allocator, "Bash {s}", .{version});
+            }
+        }
+    } else if (std.mem.eql(u8, shell_name, "zsh")) {
+        // Example output: "zsh 5.9 (x86_64-pc-linux-gnu)"
+        if (std.mem.indexOf(u8, output, " ")) |space_index| {
+            const version_start = space_index + 1;
+            if (std.mem.indexOf(u8, output[version_start..], " ")) |next_space_index| {
+                const version = output[version_start .. version_start + next_space_index];
+                return try std.fmt.allocPrint(allocator, "Zsh {s}", .{version});
+            }
+        }
+    }
+
+    //"Unknown if shell version cannot be parsed"
+    return try allocator.dupe(u8, "Unknown");
 }
 
 fn getUptime(allocator: std.mem.Allocator) ![]u8 {
