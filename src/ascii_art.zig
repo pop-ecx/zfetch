@@ -6,6 +6,7 @@ pub fn printNeofetchStyle(
     kernel_version: []const u8,
     uptime: []const u8,
     shell_version: []const u8,
+    hardware_model: []const u8,
 ) !void {
     const logo = getDistroLogo(distro_name);
 
@@ -18,6 +19,7 @@ pub fn printNeofetchStyle(
     std.debug.print("{s:<30} Distro: {s}\n", .{ logo_lines.next().?, distro_name });
     std.debug.print("{s:<30} Uptime: {s}", .{ logo_lines.next().?, uptime });
     std.debug.print("{s:<30} Shell: {s}\n", .{ logo_lines.next().?, shell_version });
+    std.debug.print("{s:<30} Hardware Model: {s}\n", .{ logo_lines.next().?, hardware_model });
 
     // Print the remaining lines of the logo (if any)
     while (logo_lines.next()) |logo_line| {
