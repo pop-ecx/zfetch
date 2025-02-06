@@ -39,53 +39,141 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
     const logos = std.ComptimeStringMap([]const u8, .{
         .{
             "Arch",
-            \\       /\\
-            \\      /  \\
-            \\     /\\   \\      
-            \\    /      \\
-            \\   /   ,,   \\
-            \\  /   |  |  -\\
-            \\ /_-''    ''-_\\
-            \\
+            \\                  .
+            \\                 / \
+            \\                /   \
+            \\               /     \
+            \\              /       \
+            \\             />,       \
+            \\            /  `*.      \
+            \\           /      `      \
+            \\          /               \
+            \\         /                 \
+            \\        /      ,.-+-..      \
+            \\       /      ,/'   `\.      \
+            \\      /      .|'     `|.   _  \
+            \\     /       :|.     ,|;    `+.\
+            \\    /        .\:     ;/,      "<\
+            \\   /     __,--+"     "+--.__     \
+            \\  /  _,+'"                 "'+._  \
+            \\ /,-'                           `-.\
+            \\'                                   '
         },
         .{
             "Ubuntu",
-            \\          _
-            \\      ---(_)
-            \\     _/  ---  \\      
-            \\    (_) |   |  |
-            \\      \\  --- _/
-            \\       ---(_)
-            \\
+            \\                             ....
+            \\              $2.',:clooo:  $1.:looooo:.
+            \\           $2.;looooooooc  $1.oooooooooo'
+            \\        $2.;looooool:,''.  $1:ooooooooooc
+            \\       $2;looool;.         $1'oooooooooo,
+            \\      $2;clool'             $1.cooooooc.  $2,,
+            \\         $2...                $1......  $2.:oo,
+            \\  $1.;clol:,.                        $2.loooo'
+            \\ $1:ooooooooo,                        $2'ooool
+            \\$1'ooooooooooo.                        $2loooo.
+            \\$1'ooooooooool                         $2coooo.
+            \\ $1,loooooooc.                        $2.loooo.
+            \\   $1.,;;;'.                          $2;ooooc
+            \\       $2...                         $2,ooool.
+            \\    $2.cooooc.              $1..',,'.  $2.cooo.
+            \\      $2;ooooo:.           $1;oooooooc.  $2:l.
+            \\       $2.coooooc,..      $1coooooooooo.
+            \\         $2.:ooooooolc:. $1.ooooooooooo'
+            \\           $2.':loooooo;  $1,oooooooooc
+            \\               $2..';::c'  $1.;loooo:'
         },
         .{
             "Debian",
-            \\     _____
-            \\  /  ___  \\      
-            \\ |  /   \\  |
-            \\ | |     | |
-            \\  \\_____/  |
-            \\    \\_____/
-            \\
+            \\        $2_,met$$$$$$$$$$gg.
+            \\     ,g$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$P.
+            \\   ,g$$$$P""       """Y$$$$.".
+            \\  ,$$$$P'              `$$$$$$.
+            \\',$$$$P       ,ggs.     `$$$$b:
+            \\`d$$$$'     ,$P"'   $1.$2    $$$$$$
+            \\ $$$$P      d$'     $1,$2    $$$$P
+            \\ $$$$:      $$$.   $1-$2    ,d$$$$'
+            \\ $$$$;      Y$b._   _,d$P'
+            \\ Y$$$$.    $1`.$2`"Y$$$$$$$$P"'
+            \\ `$$$$b      $1"-.__
+            \\  $2`Y$$$$b
+            \\   `Y$$$$.
+            \\     `$$$$b.
+            \\       `Y$$$$b.
+            \\         `"Y$$b._
+            \\             `""""
         },
         .{
             "Fedora",
-            \\      _____
-            \\     /   __)\\      
-            \\     |  /  \\ \\
-            \\  ___|  |  / /
-            \\ / (_/    \\_/
-            \\ \\___/
-            \\
+            \\             .',;::::;,'.
+            \\         .';:cccccccccccc:;,.
+            \\      .;cccccccccccccccccccccc;.
+            \\    .:cccccccccccccccccccccccccc:.
+            \\  .;ccccccccccccc;$2.:dddl:.$1;ccccccc;.
+            \\ .:ccccccccccccc;$2OWMKOOXMWd$1;ccccccc:.
+            \\.:ccccccccccccc;$2KMMc$1;cc;$2xMMc$1;ccccccc:.
+            \\,cccccccccccccc;$2MMM.$1;cc;$2;WW:$1;cccccccc,
+            \\:cccccccccccccc;$2MMM.$1;cccccccccccccccc:
+            \\:ccccccc;$2oxOOOo$1;$2MMM000k.$1;cccccccccccc:
+            \\cccccc;$20MMKxdd:$1;$2MMMkddc.$1;cccccccccccc;
+            \\ccccc;$2XMO'$1;cccc;$2MMM.$1;cccccccccccccccc'
+            \\ccccc;$2MMo$1;ccccc;$2MMW.$1;ccccccccccccccc;
+            \\ccccc;$20MNc.$1ccc$2.xMMd$1;ccccccccccccccc;
+            \\cccccc;$2dNMWXXXWM0:$1;cccccccccccccc:,
+            \\cccccccc;$2.:odl:.$1;cccccccccccccc:,.
+            \\ccccccccccccccccccccccccccccc:'.
+            \\:ccccccccccccccccccccccc:;,..
+            \\ ':cccccccccccccccc::;,.
+        },
+        .{
+            "Kali",
+            \\..............
+            \\            ..,;:ccc,.
+            \\          ......''';lxO.
+            \\.....''''..........,:ld;
+            \\           .';;;:::;,,.x,
+            \\      ..'''.            0Xxoc:,.  ...
+            \\  ....                ,ONkc;,;cokOdc',.
+            \\ .                   OMo           ':${c2}dd${c1}o.
+            \\                    dMc               :OO;
+            \\                    0M.                 .:o.
+            \\                    ;Wd
+            \\                     ;XO,
+            \\                       ,d0Odlc;,..
+            \\                           ..',;:cdOOd::,.
+            \\                                    .:d;.':;.
+            \\                                       'd,  .'
+            \\                                         ;l   ..
+            \\                                          .o
+            \\                                            c
+            \\                                            .'
+            \\                                            .
         },
         .{
             "Parrot",
-            \\     _____
-            \\  /  ___  \\      
-            \\  |  \\_/  |
-            \\  |   _   |
-            \\   \\_____/
-            \\
+            \\  `:oho/-`
+            \\`mMMMMMMMMMMMNmmdhy-
+            \\ dMMMMMMMMMMMMMMMMMMs`
+            \\ +MMsohNMMMMMMMMMMMMMm/
+            \\ .My   .+dMMMMMMMMMMMMMh.
+            \\  +       :NMMMMMMMMMMMMNo
+            \\           `yMMMMMMMMMMMMMm:
+            \\             /NMMMMMMMMMMMMMy`
+            \\              .hMMMMMMMMMMMMMN+
+            \\                  ``-NMMMMMMMMMd-
+            \\                     /MMMMMMMMMMMs`
+            \\                      mMMMMMMMsyNMN/
+            \\                     +MMMMMMMo  :sNh.
+            \\                      `NMMMMMMm     -o/
+            \\                       oMMMMMMM.
+            \\                       `NMMMMMM+
+            \\                        +MMd/NMh
+            \\                         mMm -mN`
+            \\                         /MM  `h:
+            \\                          dM`   .
+            \\                          :M-
+            \\                           d:
+            \\                           -+
+            \\                            -
         },
     });
 
