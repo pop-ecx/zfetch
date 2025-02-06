@@ -43,7 +43,7 @@ pub fn getTerminal(allocator: std.mem.Allocator) ![]u8 {
 
         // Move up to the parent process
         if (ppid == 0) {
-            return try allocator.dupe(u8, "Unknown");
+            return try allocator.dupe(u8, "xterm-256color");
         }
         pid = ppid;
     }

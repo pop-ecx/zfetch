@@ -13,22 +13,27 @@ pub fn printNeofetchStyle(
 ) !void {
     const logo = getDistroLogo(distro_name);
 
+    // ANSI escape code for blue text
+    const blue = "\x1b[34m";
+    const reset = "\x1b[0m";
+
     // Split the logo into lines
     var logo_lines = std.mem.split(u8, logo, "\n");
 
     // Print the logo and system info side by side
-    std.debug.print("{s:<50} DE/WM: {s}\n", .{ logo_lines.next().?, desktop_env });
-    std.debug.print("{s:<50} Kernel Version: {s}", .{ logo_lines.next().?, kernel_version });
-    std.debug.print("{s:<50} Distro: {s}\n", .{ logo_lines.next().?, distro_name });
-    std.debug.print("{s:<50} Uptime: {s}", .{ logo_lines.next().?, uptime });
-    std.debug.print("{s:<50} Shell: {s}\n", .{ logo_lines.next().?, shell_version });
-    std.debug.print("{s:<50} Hardware Model: {s}\n", .{ logo_lines.next().?, hardware_model });
-    std.debug.print("{s:<50} CPU: {s}\n", .{ logo_lines.next().?, cpu });
-    std.debug.print("{s:<50} GPU: {s}\n", .{ logo_lines.next().?, gpu });
-    std.debug.print("{s:<50} Terminal: {s}\n", .{ logo_lines.next().?, terminal_name });
+    std.debug.print("{s}{s:<60}{s} DE/WM: {s}\n", .{ blue, logo_lines.next().?, reset, desktop_env });
+    std.debug.print("{s}{s:<60}{s} Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, kernel_version });
+    std.debug.print("{s}{s:<60}{s} Distro: {s}\n", .{ blue, logo_lines.next().?, reset, distro_name });
+    std.debug.print("{s}{s:<60}{s} Uptime: {s}", .{ blue, logo_lines.next().?, reset, uptime });
+    std.debug.print("{s}{s:<60}{s} Shell: {s}\n", .{ blue, logo_lines.next().?, reset, shell_version });
+    std.debug.print("{s}{s:<60}{s} Hardware Model: {s}\n", .{ blue, logo_lines.next().?, reset, hardware_model });
+    std.debug.print("{s}{s:<60}{s} CPU: {s}\n", .{ blue, logo_lines.next().?, reset, cpu });
+    std.debug.print("{s}{s:<60}{s} GPU: {s}\n", .{ blue, logo_lines.next().?, reset, gpu });
+    std.debug.print("{s}{s:<60}{s} Terminal: {s}\n", .{ blue, logo_lines.next().?, reset, terminal_name });
+
     // Print the remaining lines of the logo (if any)
     while (logo_lines.next()) |logo_line| {
-        std.debug.print("{s}\n", .{logo_line});
+        std.debug.print("{s}{s}{s}\n", .{ blue, logo_line, reset });
     }
 }
 
