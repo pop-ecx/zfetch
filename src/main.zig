@@ -44,6 +44,10 @@ pub fn main() !void {
     const terminal_name = try terminal.getTerminal(allocator);
     defer allocator.free(terminal_name);
 
+    //memory info
+    const memory_info = try system.getMemoryInfo(allocator);
+    defer allocator.free(memory_info);
+
     // Print ASCII art and system info in Neofetch style
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name);
+    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info);
 }

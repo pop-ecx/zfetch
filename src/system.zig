@@ -23,6 +23,10 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     const uptime = try getUptime(allocator);
     defer allocator.free(uptime);
 
+    //get memory info
+    const memory_info = try getMemoryInfo(std.heap.page_allocator);
+    defer std.heap.page_allocator.free(memory_info);
+
     //Get bash/zsh/fish version
     const shell_version = try getShellVersion(allocator);
     defer allocator.free(shell_version);
@@ -87,6 +91,56 @@ fn getUptime(allocator: std.mem.Allocator) ![]u8 {
     // Remove the "up" prefix from the output (e.g., "up 3 hours, 43 mins" -> "3 hours, 43 mins")
     const uptime = std.mem.trim(u8, uptime_output, "up ");
     return try allocator.dupe(u8, uptime);
+}
+
+pub fn getMemoryInfo(allocator: std.mem.Allocator) ![]const u8 {
+    const meminfo_file = try std.fs.openFileAbsolute("/proc/meminfo", .{});
+    defer meminfo_file.close();
+
+    var meminfo_buf: [1024]u8 = undefined;
+    const meminfo_len = try meminfo_file.readAll(&meminfo_buf);
+    const meminfo_str = meminfo_buf[0..meminfo_len];
+
+    var mem_total: u64 = 0;
+    var mem_available: u64 = 0;
+
+    var lines = std.mem.split(u8, meminfo_str, "\n");
+    while (lines.next()) |line| {
+        if (std.mem.startsWith(u8, line, "MemTotal:")) {
+            mem_total = try parseMemInfoValue(line);
+        } else if (std.mem.startsWith(u8, line, "MemAvailable:")) {
+            mem_available = try parseMemInfoValue(line);
+        }
+    }
+
+    if (mem_total == 0 or mem_available == 0) {
+        return error.InvalidMemInfo;
+    }
+
+    const used_memory = mem_total - mem_available;
+    const memory_info = try std.fmt.allocPrint(allocator, "{}MiB / {}MiB", .{ used_memory / 1024, mem_total / 1024 });
+    return memory_info;
+}
+
+fn parseMemInfoValue(line: []const u8) !u64 {
+    var iter = std.mem.split(u8, line, " ");
+    _ = iter.next(); // Skip the label (e.g., "MemTotal:")
+
+    // Find the first non-empty token
+    while (iter.next()) |token| {
+        if (token.len > 0) {
+            // Remove the "kB" suffix if present
+            const value_str = if (std.mem.endsWith(u8, token, "kB"))
+                token[0 .. token.len - 2]
+            else
+                token;
+
+            // Parse the numeric value
+            return std.fmt.parseInt(u64, value_str, 10);
+        }
+    }
+
+    return error.InvalidMemInfo;
 }
 
 pub fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
