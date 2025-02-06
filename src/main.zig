@@ -3,6 +3,8 @@ const distro = @import("distro.zig");
 const system = @import("system.zig");
 const ascii_art = @import("ascii_art.zig");
 const machine = @import("machine.zig");
+const hardware = @import("hardware.zig");
+const terminal = @import("terminal.zig");
 
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
@@ -30,6 +32,18 @@ pub fn main() !void {
     const hardware_model = try machine.getHardwareModel(allocator);
     defer allocator.free(hardware_model);
 
+    //cpu info
+    const cpu = try hardware.getCPUInfo(allocator);
+    defer allocator.free(cpu);
+
+    //GPU info
+    const gpu = try hardware.getGPUInfo(allocator);
+    defer allocator.free(gpu);
+
+    //Terminal info
+    const terminal_name = try terminal.getTerminal(allocator);
+    defer allocator.free(terminal_name);
+
     // Print ASCII art and system info in Neofetch style
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model);
+    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name);
 }

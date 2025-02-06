@@ -7,6 +7,9 @@ pub fn printNeofetchStyle(
     uptime: []const u8,
     shell_version: []const u8,
     hardware_model: []const u8,
+    cpu: []const u8,
+    gpu: []const u8,
+    terminal_name: []const u8,
 ) !void {
     const logo = getDistroLogo(distro_name);
 
@@ -14,13 +17,15 @@ pub fn printNeofetchStyle(
     var logo_lines = std.mem.split(u8, logo, "\n");
 
     // Print the logo and system info side by side
-    std.debug.print("{s:<30} DE/WM: {s}\n", .{ logo_lines.next().?, desktop_env });
-    std.debug.print("{s:<30} Kernel Version: {s}", .{ logo_lines.next().?, kernel_version });
-    std.debug.print("{s:<30} Distro: {s}\n", .{ logo_lines.next().?, distro_name });
-    std.debug.print("{s:<30} Uptime: {s}", .{ logo_lines.next().?, uptime });
-    std.debug.print("{s:<30} Shell: {s}\n", .{ logo_lines.next().?, shell_version });
-    std.debug.print("{s:<30} Hardware Model: {s}\n", .{ logo_lines.next().?, hardware_model });
-
+    std.debug.print("{s:<50} DE/WM: {s}\n", .{ logo_lines.next().?, desktop_env });
+    std.debug.print("{s:<50} Kernel Version: {s}", .{ logo_lines.next().?, kernel_version });
+    std.debug.print("{s:<50} Distro: {s}\n", .{ logo_lines.next().?, distro_name });
+    std.debug.print("{s:<50} Uptime: {s}", .{ logo_lines.next().?, uptime });
+    std.debug.print("{s:<50} Shell: {s}\n", .{ logo_lines.next().?, shell_version });
+    std.debug.print("{s:<50} Hardware Model: {s}\n", .{ logo_lines.next().?, hardware_model });
+    std.debug.print("{s:<50} CPU: {s}\n", .{ logo_lines.next().?, cpu });
+    std.debug.print("{s:<50} GPU: {s}\n", .{ logo_lines.next().?, gpu });
+    std.debug.print("{s:<50} Terminal: {s}\n", .{ logo_lines.next().?, terminal_name });
     // Print the remaining lines of the logo (if any)
     while (logo_lines.next()) |logo_line| {
         std.debug.print("{s}\n", .{logo_line});

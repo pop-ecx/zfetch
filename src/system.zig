@@ -1,6 +1,7 @@
 const std = @import("std");
 const distro = @import("distro.zig");
 const ascii_art = @import("ascii_art.zig");
+const hardware = @import("hardware.zig");
 
 pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     // Get distro information
@@ -12,7 +13,7 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     defer allocator.free(distro_name);
 
     // Get desktop environment
-    const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse "Unknown";
+    const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse std.os.getenv("XDG_CURRENT_DESKTOP") orelse "Unknown";
 
     // Get Linux kernel version
     const kernel_version = try executeCommand(allocator, &[_][]const u8{ "uname", "-r" });
@@ -26,8 +27,16 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     const shell_version = try getShellVersion(allocator);
     defer allocator.free(shell_version);
 
+    //Get CPU info
+    const cpu = try hardware.getCPUInfo(allocator);
+    defer allocator.free(cpu);
+
+    //Get GPU info
+    const gpu = try hardware.getGPUInfo(allocator);
+    defer allocator.free(gpu);
+
     // Print ASCII art and system info in Neofetch style
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version);
+    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, cpu);
 }
 
 pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
