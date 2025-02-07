@@ -30,7 +30,7 @@ pub fn getCPUInfo(allocator: std.mem.Allocator) ![]u8 {
 
     // Parse the CPU model name and frequency
     var model_name: []const u8 = "Unknown";
-    var frequency: []const u8 = "Unknown";
+    var frequency: []const u8 = "";
 
     var lines = std.mem.split(u8, lscpu_output, "\n");
     while (lines.next()) |line| {
@@ -44,7 +44,7 @@ pub fn getCPUInfo(allocator: std.mem.Allocator) ![]u8 {
     }
 
     // Format the CPU info
-    return try std.fmt.allocPrint(allocator, "{s} @ {s}", .{ model_name, frequency });
+    return try std.fmt.allocPrint(allocator, "{s}  {s}", .{ model_name, frequency });
 }
 
 pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
