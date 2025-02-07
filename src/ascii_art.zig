@@ -40,8 +40,19 @@ pub fn printNeofetchStyle(
     while (logo_lines.next()) |logo_line| {
         std.debug.print("{s}{s}{s}\n", .{ blue, logo_line, reset });
     }
+    printColorGrid();
 }
 
+fn printColorGrid() void {
+    const colors = [_]u8{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+    for (colors) |color| {
+        std.debug.print("\x1b[48;5;{d}m  \x1b[0m", .{color});
+
+        std.debug.print(" ", .{});
+    }
+
+    std.debug.print("\n", .{});
+}
 fn getDistroLogo(distro_name: []const u8) []const u8 {
     // Normalize the distro name (e.g., extract "Parrot" from "Parrot Security")
     const normalized_name = normalizeDistroName(distro_name);
