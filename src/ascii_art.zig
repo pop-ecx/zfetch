@@ -11,6 +11,7 @@ pub fn printNeofetchStyle(
     gpu: []const u8,
     terminal_name: []const u8,
     memory_info: []const u8,
+    user_at_hostname: []const u8,
 ) !void {
     const logo = getDistroLogo(distro_name);
 
@@ -22,6 +23,8 @@ pub fn printNeofetchStyle(
     var logo_lines = std.mem.split(u8, logo, "\n");
 
     // Print the logo and system info side by side
+    std.debug.print("{s}{s:<60}{s} {s}\n", .{ blue, logo_lines.next().?, reset, user_at_hostname });
+    std.debug.print("{s}{s:<60}{s} {s}\n", .{ blue, logo_lines.next().?, reset, "----------------------------------------" });
     std.debug.print("{s}{s:<60}{s} DE/WM: {s}\n", .{ blue, logo_lines.next().?, reset, desktop_env });
     std.debug.print("{s}{s:<60}{s} Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, kernel_version });
     std.debug.print("{s}{s:<60}{s} Distro: {s}\n", .{ blue, logo_lines.next().?, reset, distro_name });

@@ -39,6 +39,10 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     const gpu = try hardware.getGPUInfo(allocator);
     defer allocator.free(gpu);
 
+    //user and hostname info
+    const user_at_hostname = try userAndHostname(allocator);
+    defer allocator.free(user_at_hostname);
+
     // Print ASCII art and system info in Neofetch style
     try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, cpu);
 }
@@ -56,6 +60,14 @@ pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
     // Parse the version from the output
     const shell_version = try parseShellVersion(allocator, shell_name, shell_version_output);
     return shell_version;
+}
+
+pub fn userAndHostname(allocator: std.mem.Allocator) ![]u8 {
+    //Get user and hostname info to be printed on top
+    const user = std.os.getenv("USER") orelse return try allocator.dupe(u8, "Unknown");
+    var hostname_buf: [64]u8 = undefined; // Buffer to store the hostname
+    const hostname = std.os.gethostname(&hostname_buf) catch "Unknown";
+    return try std.fmt.allocPrint(allocator, "{s}@{s}", .{ user, hostname });
 }
 
 fn parseShellVersion(allocator: std.mem.Allocator, shell_name: []const u8, output: []const u8) ![]u8 {

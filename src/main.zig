@@ -48,6 +48,10 @@ pub fn main() !void {
     const memory_info = try system.getMemoryInfo(allocator);
     defer allocator.free(memory_info);
 
+    //user at hostname
+    const user_at_hostname = try system.userAndHostname(allocator);
+    defer allocator.free(user_at_hostname);
+
     // Print ASCII art and system info in Neofetch style
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info);
+    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname);
 }
