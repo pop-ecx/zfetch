@@ -23,7 +23,7 @@ pub fn printNeofetchStyle(
     var logo_lines = std.mem.split(u8, logo, "\n");
 
     // Print the logo and system info side by side
-    std.debug.print("{s}{s:<60}{s} {s}\n", .{ blue, logo_lines.next().?, reset, user_at_hostname });
+    std.debug.print("{s}{s:<60}{s} {s}{s}{s}\n", .{ blue, logo_lines.next().?, reset, blue, user_at_hostname, reset });
     std.debug.print("{s}{s:<60}{s} {s}\n", .{ blue, logo_lines.next().?, reset, "----------------------------------------" });
     std.debug.print("{s}{s:<60}{s} DE/WM: {s}\n", .{ blue, logo_lines.next().?, reset, desktop_env });
     std.debug.print("{s}{s:<60}{s} Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, kernel_version });
