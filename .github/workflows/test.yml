@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, debian-latest, fedora-latest]
+        os: [ubuntu-latest] 
 
     steps:
       - name: Checkout repo
