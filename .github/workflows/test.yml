@@ -8,24 +8,23 @@ on:
 
 jobs:
   build-and-test:
-    name: Build & Test on ${{ matrix.os }}
+    name: Build and test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [ubuntu-latest, debian-latest, archlinux, fedora-latest]
+        os: [ubuntu-latest, debian-latest, fedora-latest]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout repo
+      - uses: actions/checkout@v3
 
-      - name: Install Zig
-        uses: goto-bus-stop/setup-zig@v2
+      - name: Install zig
+      - uses: mlugg/setup-zig@v1
         with:
-          zig-version: 0.11.0
+          version: 0.11.0
 
       - name: Build
         run: zig build -Dtarget=x86_64-linux-gnu
 
-      - name: Run & Test
-        run: ./zig-out/bin/zfetch
+      - name: Run & test
+      - run: ./zig-out/bin/zfetch
