@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Install zig
-      - uses: mlugg/setup-zig@v1
+        uses: mlugg/setup-zig@v1
         with:
           version: 0.11.0
 
@@ -27,4 +27,4 @@ jobs:
         run: zig build -Dtarget=x86_64-linux-gnu
 
       - name: Run & test
-      - run: ./zig-out/bin/zfetch
+        run: ./zig-out/bin/zfetch
