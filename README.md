@@ -1,19 +1,14 @@
 # Zfetch
-A small little neofetch clone in zig 0.11
+A small neofetch clone in zig 0.11
 
 ## Background
-If you want to learn a language, build something you are familiar with with it.
-Hence zfetch.
+Zfetch is a blazingly fast system information fetching tool written in zig.
 
 ## How it looks
-Check this out
+Behold
 ![zfetch](zfetch.gif)
 
-## about
-Zfetch is a neofetch-like app that gets systeminfo while printing a cool ascii
-besides it. It's zig, so it's blazingly fast (not that anyone cares for something like this :happy:).
-
-## installation
+## Installation
 This is not in any repo, so to install
 
 - Git clone the repo
@@ -22,4 +17,4 @@ This is not in any repo, so to install
 
 You can also download pre-built binaries from the releases page
 
-> This is still in beta, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/master/CONTRIBUTING.md)
+> This is still in beta, alot to still do, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/master/CONTRIBUTING.md)

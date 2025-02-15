@@ -1,7 +1,6 @@
 ## Intro
 Hi, thank you for your interest in wanting to contribute. 
-This shows you're an idle nerd, go touch some grass or get
-a girlfriend you virgin.
+This shows you're an idle nerd.
 
 If none of that works for you, here's how you can contribute
 
