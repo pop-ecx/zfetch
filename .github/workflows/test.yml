@@ -1,0 +1,30 @@
+name: Zig Build & Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build and test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest] 
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install zig
+        uses: mlugg/setup-zig@v1
+        with:
+          version: 0.11.0
+
+      - name: Build
+        run: zig build -Dtarget=x86_64-linux-gnu
+
+      - name: Run & test
+        run: ./zig-out/bin/zfetch

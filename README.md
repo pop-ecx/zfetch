@@ -1,15 +1,25 @@
 # Zfetch
+A small little neofetch clone in zig 0.11
 
-A silly liitle neofetch clone in zig 0.11
+## Background
+If you want to learn a language, build something you are familiar with with it.
+Hence zfetch.
 
-> NOT COMPLETE BY ANY STRETCH OF IMAGINATION`
+## How it looks
+Check this out
+![zfetch](zfetch.gif)
 
-### Problems to solve
-- only take the parrot part after reading /proc/uname
-- Convert uptime to hours after reading /proc/uptime(1st part is the true uptime)
-- Move the printed text from stdout to the right side of the logo
-- Ascii art should be a bit intelligent
-- Remove the voidvoidvoid print from stdout
+## about
+Zfetch is a neofetch-like app that gets systeminfo while printing a cool ascii
+besides it. It's zig, so it's blazingly fast (not that anyone cares for something like this :happy:).
 
-### Progress so far
-- Successfully read kernel, uptime and architecture
+## installation
+This is not in any repo, so to install
+
+- Git clone the repo
+- cd into the repo
+- run `zig build`
+
+You can also download pre-built binaries from the releases page
+
+> This is still in beta, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/master/CONTRIBUTING.md)
