@@ -9,7 +9,7 @@ const terminal = @import("terminal.zig");
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
 
-    // Get distro information
+    // distro info
     const distro_info = try distro.getDistroInfo(allocator);
     defer allocator.free(distro_info);
 
@@ -17,7 +17,7 @@ pub fn main() !void {
     const distro_name = try distro.parseDistroName(allocator, distro_info);
     defer allocator.free(distro_name);
 
-    // Get system information
+    // sys info
     const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse "Unknown";
 
     const kernel_version = try system.executeCommand(allocator, &[_][]const u8{ "uname", "-r" });
@@ -52,6 +52,6 @@ pub fn main() !void {
     const user_at_hostname = try system.userAndHostname(allocator);
     defer allocator.free(user_at_hostname);
 
-    // Print ASCII art and system info in Neofetch style
+    // Print ASCII art n sys info
     try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname);
 }

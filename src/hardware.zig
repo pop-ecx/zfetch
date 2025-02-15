@@ -1,7 +1,6 @@
 const std = @import("std");
 
 pub fn getResolution(allocator: std.mem.Allocator) ![]u8 {
-    // Execute the `xrandr` command to get the resolution
     const xrandr_output = try executeCommand(allocator, &[_][]const u8{"xrandr"});
     defer allocator.free(xrandr_output);
 
@@ -19,12 +18,10 @@ pub fn getResolution(allocator: std.mem.Allocator) ![]u8 {
         }
     }
 
-    // If the resolution cannot be parsed, return "Unknown"
     return try allocator.dupe(u8, "Unknown");
 }
 
 pub fn getCPUInfo(allocator: std.mem.Allocator) ![]u8 {
-    // Execute the `lscpu` command to get the CPU information
     const lscpu_output = try executeCommand(allocator, &[_][]const u8{"lscpu"});
     defer allocator.free(lscpu_output);
 
@@ -48,7 +45,6 @@ pub fn getCPUInfo(allocator: std.mem.Allocator) ![]u8 {
 }
 
 pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
-    // Execute the `lspci` command to get the GPU information
     const lspci_output = try executeCommand(allocator, &[_][]const u8{"lspci"});
     defer allocator.free(lspci_output);
 
@@ -61,7 +57,6 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
         }
     }
 
-    // If the GPU cannot be parsed, return "Unknown"
     return try allocator.dupe(u8, "Unknown");
 }
 

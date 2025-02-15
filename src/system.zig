@@ -4,7 +4,7 @@ const ascii_art = @import("ascii_art.zig");
 const hardware = @import("hardware.zig");
 
 pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
-    // Get distro information
+    // distro info
     const distro_info = try distro.getDistroInfo(allocator);
     defer allocator.free(distro_info);
 
@@ -12,30 +12,30 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     const distro_name = try distro.parseDistroName(allocator, distro_info);
     defer allocator.free(distro_name);
 
-    // Get desktop environment
+    // Get DE
     const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse std.os.getenv("XDG_CURRENT_DESKTOP") orelse "Unknown";
 
-    // Get Linux kernel version
+    // Linux kernel version
     const kernel_version = try executeCommand(allocator, &[_][]const u8{ "uname", "-r" });
     defer allocator.free(kernel_version);
 
-    // Get system uptime
+    // sys uptime
     const uptime = try getUptime(allocator);
     defer allocator.free(uptime);
 
-    //get memory info
+    // mem info
     const memory_info = try getMemoryInfo(std.heap.page_allocator);
     defer std.heap.page_allocator.free(memory_info);
 
-    //Get bash/zsh/fish version
+    // bash/zsh/fish version
     const shell_version = try getShellVersion(allocator);
     defer allocator.free(shell_version);
 
-    //Get CPU info
+    // CPU info
     const cpu = try hardware.getCPUInfo(allocator);
     defer allocator.free(cpu);
 
-    //Get GPU info
+    // GPU info
     const gpu = try hardware.getGPUInfo(allocator);
     defer allocator.free(gpu);
 
@@ -43,12 +43,12 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
     const user_at_hostname = try userAndHostname(allocator);
     defer allocator.free(user_at_hostname);
 
-    // Print ASCII art and system info in Neofetch style
+    // Print ASCII art and sys info
     try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, cpu);
 }
 
 pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
-    // Get the current shell from the SHELL environment variable
+    // Get the current shell
     const shell_path = std.os.getenv("SHELL") orelse return try allocator.dupe(u8, "Unknown");
 
     // Extract the shell name (e.g., "bash" or "zsh") from the path
@@ -63,7 +63,7 @@ pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
 }
 
 pub fn userAndHostname(allocator: std.mem.Allocator) ![]u8 {
-    //Get user and hostname info to be printed on top
+    //user and hostname info printed on top
     const user = std.os.getenv("USER") orelse return try allocator.dupe(u8, "Unknown");
     var hostname_buf: [64]u8 = undefined; // Buffer to store the hostname
     const hostname = std.os.gethostname(&hostname_buf) catch "Unknown";
@@ -91,16 +91,13 @@ fn parseShellVersion(allocator: std.mem.Allocator, shell_name: []const u8, outpu
         }
     }
 
-    //"Unknown if shell version cannot be parsed"
     return try allocator.dupe(u8, "Unknown");
 }
 
 fn getUptime(allocator: std.mem.Allocator) ![]u8 {
-    // Execute the `uptime` command
     const uptime_output = try executeCommand(allocator, &[_][]const u8{ "uptime", "-p" });
     defer allocator.free(uptime_output);
 
-    // Remove the "up" prefix from the output (e.g., "up 3 hours, 43 mins" -> "3 hours, 43 mins")
     const uptime = std.mem.trim(u8, uptime_output, "up ");
     return try allocator.dupe(u8, uptime);
 }

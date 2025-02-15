@@ -1,7 +1,6 @@
 const std = @import("std");
 
 pub fn getHardwareModel(allocator: std.mem.Allocator) ![]u8 {
-    // Execute the `hostnamectl` command
     const hostnamectl_output = try executeCommand(allocator, &[_][]const u8{"hostnamectl"});
     defer allocator.free(hostnamectl_output);
 
@@ -14,7 +13,6 @@ pub fn getHardwareModel(allocator: std.mem.Allocator) ![]u8 {
         }
     }
 
-    // If the hardware model cannot be parsed, return "Unknown"
     return try allocator.dupe(u8, "Unknown");
 }
 
