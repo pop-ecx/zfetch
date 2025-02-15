@@ -22,4 +22,4 @@ This is not in any repo, so to install
 
 You can also download pre-built binaries from the releases page
 
-> This is still in beta, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/main/CONTRIBUTING.md)
+> This is still in beta, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/master/CONTRIBUTING.md)
