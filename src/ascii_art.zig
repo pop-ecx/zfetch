@@ -16,7 +16,7 @@ pub fn printNeofetchStyle(
     const logo = getDistroLogo(distro_name);
 
     // ANSI escape code for blue text
-    const blue = "\x1b[34m";
+    const blue = "\x1b[38;2;135;206;250m";
     const reset = "\x1b[0m";
 
     // Split the logo into lines
