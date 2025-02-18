@@ -12,6 +12,7 @@ pub fn printNeofetchStyle(
     terminal_name: []const u8,
     memory_info: []const u8,
     user_at_hostname: []const u8,
+    package_count: usize,
 ) !void {
     const logo = getDistroLogo(distro_name);
 
@@ -29,6 +30,7 @@ pub fn printNeofetchStyle(
     std.debug.print("{s}{s:<60}{s} Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, kernel_version });
     std.debug.print("{s}{s:<60}{s} Uptime: {s}", .{ blue, logo_lines.next().?, reset, uptime });
     std.debug.print("{s}{s:<60}{s} Shell: {s}\n", .{ blue, logo_lines.next().?, reset, shell_version });
+    std.debug.print("{s}{s:<60}{s} Packages: {}\n", .{ blue, logo_lines.next().?, reset, package_count });
     std.debug.print("{s}{s:<60}{s} Hardware Model: {s}\n", .{ blue, logo_lines.next().?, reset, hardware_model });
     std.debug.print("{s}{s:<60}{s} CPU: {s}\n", .{ blue, logo_lines.next().?, reset, cpu });
     std.debug.print("{s}{s:<60}{s} GPU: {s}\n", .{ blue, logo_lines.next().?, reset, gpu });
