@@ -24,9 +24,9 @@ pub fn printNeofetchStyle(
 
     std.debug.print("{s}{s:<60}{s} {s}{s}{s}\n", .{ blue, logo_lines.next().?, reset, blue, user_at_hostname, reset });
     std.debug.print("{s}{s:<60}{s} {s}\n", .{ blue, logo_lines.next().?, reset, "-----------------" });
+    std.debug.print("{s}{s:<60}{s} Distro: {s}\n", .{ blue, logo_lines.next().?, reset, distro_name });
     std.debug.print("{s}{s:<60}{s} DE/WM: {s}\n", .{ blue, logo_lines.next().?, reset, desktop_env });
     std.debug.print("{s}{s:<60}{s} Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, kernel_version });
-    std.debug.print("{s}{s:<60}{s} Distro: {s}\n", .{ blue, logo_lines.next().?, reset, distro_name });
     std.debug.print("{s}{s:<60}{s} Uptime: {s}", .{ blue, logo_lines.next().?, reset, uptime });
     std.debug.print("{s}{s:<60}{s} Shell: {s}\n", .{ blue, logo_lines.next().?, reset, shell_version });
     std.debug.print("{s}{s:<60}{s} Hardware Model: {s}\n", .{ blue, logo_lines.next().?, reset, hardware_model });
