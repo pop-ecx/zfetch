@@ -5,6 +5,7 @@ const ascii_art = @import("ascii_art.zig");
 const machine = @import("machine.zig");
 const hardware = @import("hardware.zig");
 const terminal = @import("terminal.zig");
+const packages = @import("package.zig");
 
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
@@ -52,6 +53,9 @@ pub fn main() !void {
     const user_at_hostname = try system.userAndHostname(allocator);
     defer allocator.free(user_at_hostname);
 
+    //installed packages count
+    const package_count = try packages.getInstalledPackagesCount(allocator);
+
     // Print ASCII art n sys info
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname);
+    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname, package_count);
 }
