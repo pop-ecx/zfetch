@@ -20,19 +20,14 @@ pub fn getInstalledPackagesCount(allocator: std.mem.Allocator) !usize {
 }
 
 fn getArchPackageCount(allocator: std.mem.Allocator) !usize {
-    const file = try std.fs.cwd().openFile("/var/lib/pacman/local", .{});
-    defer file.close();
-
-    const file_size = try file.getEndPos();
-    const buffer = try allocator.alloc(u8, file_size);
-    defer allocator.free(buffer);
-
-    _ = try file.readAll(buffer);
+    _ = allocator;
+    var dir = try std.fs.cwd().openIterableDir("/var/lib/pacman/local", .{});
+    defer dir.close();
 
     var count: usize = 0;
-    var lines = std.mem.split(u8, buffer, "\n");
-    while (lines.next()) |line| {
-        if (std.mem.startsWith(u8, line, "Package: ")) {
+    var iter = dir.iterate();
+    while (try iter.next()) |entry| {
+        if (entry.kind == .directory) {
             count += 1;
         }
     }
