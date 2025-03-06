@@ -6,6 +6,7 @@ const machine = @import("machine.zig");
 const hardware = @import("hardware.zig");
 const terminal = @import("terminal.zig");
 const packages = @import("package.zig");
+const theme = @import("theme.zig");
 
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
@@ -56,6 +57,13 @@ pub fn main() !void {
     //installed packages count
     const package_count = try packages.getInstalledPackagesCount(allocator);
 
+    //gtk settings icons and theme
+    const gtk_settings = try theme.getGtkSettings(allocator);
+    defer {
+        allocator.free(gtk_settings.theme);
+        allocator.free(gtk_settings.icons);
+    }
+
     // Print ASCII art n sys info
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname, package_count);
+    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname, package_count, gtk_settings.theme, gtk_settings.icons);
 }
