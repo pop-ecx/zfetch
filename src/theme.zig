@@ -53,18 +53,26 @@ fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSetting
 
     var lines = std.mem.split(u8, buffer, "\n");
     while (lines.next()) |line| {
-        if (std.mem.startsWith(u8, line, "gtk-theme-name=")) {
-            const theme_name = line["gtk-theme-name=".len..];
-            theme = try allocator.dupe(u8, std.mem.trim(u8, theme_name, "\""));
-            theme_found = true;
-        } else if (std.mem.startsWith(u8, line, "gtk-icon-theme-name=")) {
-            const icon_name = line["gtk-icon-theme-name=".len..];
-            icons = try allocator.dupe(u8, std.mem.trim(u8, icon_name, "\""));
-            icons_found = true;
+        // Trim leading and trailing whitespace
+        const trimmed_line = std.mem.trim(u8, line, " \t");
+
+        if (std.mem.startsWith(u8, trimmed_line, "gtk-theme-name")) {
+            const theme_part = std.mem.trim(u8, trimmed_line["gtk-theme-name".len..], " \t");
+            if (theme_part.len > 0 and theme_part[0] == '=') {
+                const theme_name = std.mem.trim(u8, theme_part[1..], " \t\"");
+                theme = try allocator.dupe(u8, theme_name);
+                theme_found = true;
+            }
+        } else if (std.mem.startsWith(u8, trimmed_line, "gtk-icon-theme-name")) {
+            const icons_part = std.mem.trim(u8, trimmed_line["gtk-icon-theme-name".len..], " \t");
+            if (icons_part.len > 0 and icons_part[0] == '=') {
+                const icon_name = std.mem.trim(u8, icons_part[1..], " \t\"");
+                icons = try allocator.dupe(u8, icon_name);
+                icons_found = true;
+            }
         }
     }
 
-    // If the expected keys are not found, return an error
     if (!theme_found or !icons_found) {
         return error.GtkSettingsNotFound;
     }
