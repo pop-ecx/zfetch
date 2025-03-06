@@ -21,7 +21,10 @@ pub fn getGtkSettings(allocator: std.mem.Allocator) !GtkSettings {
 
     for (paths_to_try) |path| {
         const file = std.fs.cwd().openFile(path, .{}) catch |err| {
-            std.debug.print("Failed to open file: {s}, error: {}\n", .{ path, err });
+            // Only print an error if the error is NOT FileNotFound
+            if (err != error.FileNotFound) {
+                std.debug.print("Failed to open file: {s}, error: {}\n", .{ path, err });
+            }
             continue;
         };
 
