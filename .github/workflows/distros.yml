@@ -21,10 +21,10 @@ jobs:
       - name: Run tests on ${{ matrix.distro }}
         run: |
           docker run --rm ${{ matrix.distro }} sh -c "
-            apt-get update && apt-get install -y wget || \
-            dnf install -y wget || \
+            apt-get update && apt-get install -y wget gtk3|| \
+            dnf install -y wget gtk3 || \
             pacman -Sy --noconfirm wget gtk3 || \
-            apk add --no-cache wget
+            apk add --no-cache wget gtk3
             wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
             chmod +x zfetch
             ./zfetch
