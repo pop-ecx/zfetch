@@ -23,7 +23,7 @@ jobs:
           docker run --rm ${{ matrix.distro }} sh -c "
             apt-get update && apt-get install -y wget || \
             dnf install -y wget || \
-            pacman -Sy --noconfirm wget || \
+            pacman -Sy --noconfirm wget gtk3 || \
             apk add --no-cache wget
             wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
             chmod +x zfetch
