@@ -1,0 +1,27 @@
+name: Test zfetch on Multiple Linux Distributions
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-zfetch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro: [archlinux]
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Test zfetch on ${{ matrix.distro }}
+        run: |
+            docker run --rm archlinux sh -c "
+              pacman -Sy --noconfirm gtk3 wget coreutils
+              wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
+              chmod +x zfetch
+              ./zfetch
+            "
