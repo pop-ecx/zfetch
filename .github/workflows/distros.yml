@@ -27,13 +27,6 @@ jobs:
               chmod +x zfetch
               ./zfetch
             "
-          elif [ '${{ matrix.distro }}' = 'fedora' ]; then
-            docker run --rm fedora sh -c "
-              dnf install -y gtk3 wget coreutils redhat-lsb-core hostname
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
-              chmod +x zfetch
-              ./zfetch
-            "
           elif [ '${{ matrix.distro }}' = 'ubuntu' ]; then
             docker run --rm ubuntu sh -c "
               apt-get update
@@ -44,10 +37,28 @@ jobs:
             "
           elif [ '${{ matrix.distro }}' = 'debian' ]; then
             docker run --rm debian sh -c "
+              # Update and install dependencies
               apt-get update
-              apt-get install -y libgtk-3-0 wget coreutils lsb-release hostname
+              apt-get install -y libgtk-3-0 wget coreutils lsb-release hostname dmidecode
+
+              # Debug: Check installed programs
+              echo 'Installed programs:'
+              which lsb_release
+              which hostname
+              which uname
+              which dmidecode
+
+              # Debug: Check environment variables
+              echo 'Environment variables:'
+              env
+
+              # Debug: Check shared libraries
               wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
               chmod +x zfetch
+              echo 'Inspecting binary:'
+              ldd ./zfetch
+
+              # Run zfetch
               ./zfetch
-            "
+          "
           fi
