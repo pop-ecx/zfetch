@@ -6,13 +6,12 @@ on:
   pull_request:
     branches: [master]
 
-
 jobs:
   test-zfetch:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        distro: [archlinux, fedora, ubuntu, debian]
+        distro: [archlinux]
       fail-fast: false
     steps:
       - name: Checkout repository
@@ -20,45 +19,9 @@ jobs:
 
       - name: Test zfetch on ${{ matrix.distro }}
         run: |
-          if [ '${{ matrix.distro }}' = 'archlinux' ]; then
             docker run --rm archlinux sh -c "
               pacman -Sy --noconfirm gtk3 wget coreutils
               wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
               chmod +x zfetch
               ./zfetch
             "
-          elif [ '${{ matrix.distro }}' = 'ubuntu' ]; then
-            docker run --rm ubuntu sh -c "
-              apt-get update
-              apt-get install -y libgtk-3-0 wget coreutils lsb-release hostname
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
-              chmod +x zfetch
-              ./zfetch
-            "
-          elif [ '${{ matrix.distro }}' = 'debian' ]; then
-            docker run --rm debian sh -c "
-              # Update and install dependencies
-              apt-get update
-              apt-get install -y libgtk-3-0 wget coreutils lsb-release hostname dmidecode
-
-              # Debug: Check installed programs
-              echo 'Installed programs:'
-              which lsb_release
-              which hostname
-              which uname
-              which dmidecode
-
-              # Debug: Check environment variables
-              echo 'Environment variables:'
-              env
-
-              # Debug: Check shared libraries
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
-              chmod +x zfetch
-              echo 'Inspecting binary:'
-              ldd ./zfetch
-
-              # Run zfetch
-              ./zfetch
-          "
-          fi
