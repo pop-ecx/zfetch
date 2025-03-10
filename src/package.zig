@@ -10,7 +10,7 @@ pub fn getInstalledPackagesCount(allocator: std.mem.Allocator) !usize {
 
     if (std.mem.eql(u8, distro_family, "arch")) {
         return try getArchPackageCount(allocator);
-    } else if (std.mem.eql(u8, distro_family, "debian") or std.mem.eql(u8, distro_family, "ubuntu")) {
+    } else if (std.mem.eql(u8, distro_family, "debian") or std.mem.eql(u8, distro_family, "ubuntu") or std.mem.eql(u8, distro_family, "kali")) {
         return try getDebianPackageCount(allocator);
     } else if (std.mem.eql(u8, distro_family, "fedora") or std.mem.eql(u8, distro_family, "rhel")) {
         return try getFedoraPackageCount(allocator);

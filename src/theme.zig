@@ -12,6 +12,7 @@ pub fn getGtkSettings(allocator: std.mem.Allocator) !GtkSettings {
     const paths_to_try = [_][]const u8{
         try std.fs.path.join(allocator, &[_][]const u8{ home_dir, ".config", "gtk-3.0", "settings.ini" }),
         "/etc/gtk-3.0/settings.ini",
+        "/etc/xdg/gtk-3.0/settings.ini",
         "/usr/share/gtk-3.0/settings.ini",
     };
     defer {
