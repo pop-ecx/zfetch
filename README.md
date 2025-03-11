@@ -24,7 +24,16 @@ You can also download pre-built binaries from the releases page
 - [x] Parrot os 
 - [x] Kali linux 
 - [x] Arch 
-- [x] Ubuntu 
-- [ ] Fedora 
+- [x] Ubuntu (remnux)
+- [x] Fedora 41
+
+Kali
+![Kali](2025-03-11_15-43.png)
+
+Ubuntu
+![ubuntu](2025-03-11_15-55.png)
+
+Fedora
+![Fedora](2025-03-11_15-51.png)
 
 > This is still in beta, alot to still do, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/master/contributing.md)
