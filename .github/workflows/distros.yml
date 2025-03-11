@@ -34,5 +34,9 @@ jobs:
               echo "Extracted to: $PWD/$ZIG_DIR"
               export PATH="$PWD/$ZIG_DIR:$PATH"
               zig version
+              git clone --single-branch --branch dev https://github.com/pop-ecx/zfetch.git
+              cd zfetch
+              zig build
+              ./zig-out/bin/zfetch
             "
           fi
