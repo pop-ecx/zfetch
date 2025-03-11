@@ -60,7 +60,7 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
     return try allocator.dupe(u8, "Unknown");
 }
 
-fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
+fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
     var result = std.ArrayList(u8).init(allocator);
     defer result.deinit();
 
