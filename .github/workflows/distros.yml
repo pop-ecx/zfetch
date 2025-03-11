@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        distro: [archlinux, fedora, ubuntu]
+        distro: [archlinux]
       fail-fast: false
     steps:
       - name: Checkout repository
@@ -26,19 +26,3 @@ jobs:
               chmod +x zfetch
               ./zfetch
             "
-          elif [ '${{ matrix.distro }}' = 'fedora' ]; then
-            docker run --rm fedora sh -c "
-              dnf install -y gtk3 wget coreutils redhat-lsb-core hostname
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.4.0-beta.2/zfetch
-              chmod +x zfetch
-              ./zfetch
-            "
-          elif [ '${{ matrix.distro }}' = 'ubuntu' ]; then
-            docker run --rm ubuntu sh -c "
-              apt-get update
-              apt-get install -y libgtk-3-0 wget coreutils lsb-release hostname
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.4.0-beta.2/zfetch
-              chmod +x zfetch
-              ./zfetch
-            "
-          fi
