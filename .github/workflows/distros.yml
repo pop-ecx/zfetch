@@ -37,6 +37,7 @@ jobs:
               git clone --single-branch --branch dev https://github.com/pop-ecx/zfetch.git
               cd zfetch
               zig build
-              ./zig-out/bin/zfetch
+              cd ./zig-out/bin/
+              ./zfetch
             "
           fi
