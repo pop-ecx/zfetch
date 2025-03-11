@@ -25,6 +25,6 @@ You can also download pre-built binaries from the releases page
 - [x] Kali linux 
 - [x] Arch 
 - [x] Ubuntu 
-- [] Fedora 
+- [ ] Fedora 
 
 > This is still in beta, alot to still do, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/master/contributing.md)
