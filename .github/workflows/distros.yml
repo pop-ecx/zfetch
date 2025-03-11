@@ -28,9 +28,9 @@ jobs:
             "
           elif [ '${{ matrix.distro }}' = 'fedora' ]; then
             docker run --rm fedora sh -c "
-              dnf install -y gtk3 wget coreutils redhat-lsb-core hostname
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
-              chmod +x zfetch
-              ./zfetch
+              dnf install -y gtk3 tar wget coreutils redhat-lsb-core hostname
+              wget https://ziglang.org/download/0.11.0/zig-linux-x86_64-0.11.0.tar.xz
+              tar -xf zig-linux-x86_64-0.11.0.tar.xz
+              echo $PWD
             "
           fi
