@@ -33,4 +33,12 @@ jobs:
               chmod +x zfetch
               ./zfetch
             "
+          elif [ '${{ matrix.distro }}' = 'ubuntu' ]; then
+            docker run --rm ubuntu sh -c "
+              apt-get update
+              apt-get install -y libgtk-3-0 wget coreutils lsb-release hostname
+              wget https://github.com/pop-ecx/zfetch/releases/download/v0.4.0/zfetch
+              chmod +x zfetch
+              ./zfetch
+            "
           fi
