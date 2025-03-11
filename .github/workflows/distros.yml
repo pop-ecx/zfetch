@@ -19,9 +19,11 @@ jobs:
 
       - name: Test zfetch on ${{ matrix.distro }}
         run: |
+          if [ '${{ matrix.distro }}' = 'archlinux' ]; then
             docker run --rm archlinux sh -c "
               pacman -Sy --noconfirm gtk3 wget coreutils
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
+              wget https://github.com/pop-ecx/zfetch/releases/download/v0.4.0-beta.2/zfetch
               chmod +x zfetch
               ./zfetch
             "
+          fi

@@ -12,6 +12,7 @@ pub fn getGtkSettings(allocator: std.mem.Allocator) !GtkSettings {
     const paths_to_try = [_][]const u8{
         try std.fs.path.join(allocator, &[_][]const u8{ home_dir, ".config", "gtk-3.0", "settings.ini" }),
         "/etc/gtk-3.0/settings.ini",
+        "/etc/xdg/gtk-3.0/settings.ini",
         "/usr/share/gtk-3.0/settings.ini",
     };
     defer {
@@ -37,7 +38,7 @@ pub fn getGtkSettings(allocator: std.mem.Allocator) !GtkSettings {
         return settings;
     }
 
-    return error.GtkSettingsNotFound;
+    return getGtkSettingsFromGsettings(allocator);
 }
 
 fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSettings {
@@ -81,4 +82,39 @@ fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSetting
     }
 
     return GtkSettings{ .theme = theme, .icons = icons };
+}
+
+fn getGtkSettingsFromGsettings(allocator: std.mem.Allocator) !GtkSettings {
+    // Run `gsettings get org.gnome.desktop.interface gtk-theme`
+    // In future we can add support for other desktop environments
+    const theme_result = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.gnome.desktop.interface", "gtk-theme" });
+    defer allocator.free(theme_result);
+
+    // Run `gsettings get org.gnome.desktop.interface icon-theme`
+    const icons_result = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.gnome.desktop.interface", "icon-theme" });
+    defer allocator.free(icons_result);
+
+    // Remove single quotes and trim whitespace from the results
+    const theme = try allocator.dupe(u8, std.mem.trim(u8, theme_result, " '"));
+    const icons = try allocator.dupe(u8, std.mem.trim(u8, icons_result, " '"));
+
+    return GtkSettings{ .theme = theme, .icons = icons };
+}
+
+fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
+    const result = try std.ChildProcess.exec(.{
+        .allocator = allocator,
+        .argv = argv,
+    });
+    defer {
+        allocator.free(result.stdout);
+        allocator.free(result.stderr);
+    }
+
+    if (result.term.Exited != 0) {
+        return error.CommandFailed;
+    }
+
+    const output = std.mem.trimRight(u8, result.stdout, "\n");
+    return try allocator.dupe(u8, output);
 }
