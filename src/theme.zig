@@ -86,6 +86,7 @@ fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSetting
 
 fn getGtkSettingsFromGsettings(allocator: std.mem.Allocator) !GtkSettings {
     // Run `gsettings get org.gnome.desktop.interface gtk-theme`
+    // In future we can add support for other desktop environments
     const theme_result = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.gnome.desktop.interface", "gtk-theme" });
     defer allocator.free(theme_result);
 
@@ -94,13 +95,13 @@ fn getGtkSettingsFromGsettings(allocator: std.mem.Allocator) !GtkSettings {
     defer allocator.free(icons_result);
 
     // Remove single quotes and trim whitespace from the results
-    const theme = try allocator.dupe(u8, std.mem.trim(u8, theme_result, " '\n"));
-    const icons = try allocator.dupe(u8, std.mem.trim(u8, icons_result, " '\n"));
+    const theme = try allocator.dupe(u8, std.mem.trim(u8, theme_result, " '"));
+    const icons = try allocator.dupe(u8, std.mem.trim(u8, icons_result, " '"));
 
     return GtkSettings{ .theme = theme, .icons = icons };
 }
 
-fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
+fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
     const result = try std.ChildProcess.exec(.{
         .allocator = allocator,
         .argv = argv,
@@ -114,5 +115,6 @@ fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
         return error.CommandFailed;
     }
 
-    return result.stdout;
+    const output = std.mem.trimRight(u8, result.stdout, "\n");
+    return try allocator.dupe(u8, output);
 }
