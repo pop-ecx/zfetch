@@ -22,22 +22,15 @@ jobs:
           if [ '${{ matrix.distro }}' = 'archlinux' ]; then
             docker run --rm archlinux sh -c "
               pacman -Sy --noconfirm gtk3 wget coreutils
-              wget https://github.com/pop-ecx/zfetch/releases/download/v0.3.0/zfetch
+              wget https://github.com/pop-ecx/zfetch/releases/download/v0.4.0/zfetch
               chmod +x zfetch
               ./zfetch
             "
           elif [ '${{ matrix.distro }}' = 'fedora' ]; then
             docker run --rm fedora sh -c "
-              dnf install -y gtk3 tar wget coreutils redhat-lsb-core hostname
-              wget https://ziglang.org/download/0.11.0/zig-linux-x86_64-0.11.0.tar.xz
-              ZIG_DIR=$(tar -tf zig-linux-x86_64-0.11.0.tar.xz | head -n 1 | cut -d '/' -f1)
-              echo "Extracted to: $PWD/$ZIG_DIR"
-              export PATH="$PWD/$ZIG_DIR:$PATH"
-              zig version
-              git clone --single-branch --branch dev https://github.com/pop-ecx/zfetch.git
-              cd zfetch
-              zig build
-              cd ./zig-out/bin/
+              dnf install -y gtk3 wget coreutils redhat-lsb-core hostname
+              wget https://github.com/pop-ecx/zfetch/releases/download/v0.4.0/zfetch
+              chmod +x zfetch
               ./zfetch
             "
           fi
