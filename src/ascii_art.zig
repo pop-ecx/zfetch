@@ -18,28 +18,31 @@ pub fn printNeofetchStyle(
 ) !void {
     const logo = getDistroLogo(distro_name);
 
-    // ANSI escape code for blue text
-    const blue = "\x1b[38;2;135;206;250m";
-    const reset = "\x1b[0m";
+    // ANSI escape codes
+    const blue = "\x1b[38;2;135;206;250m"; // Blue text
+    const bold = "\x1b[1m"; // Bold text
+    const reset = "\x1b[0m"; // Reset formatting
 
     // Split the logo into lines
     var logo_lines = std.mem.split(u8, logo, "\n");
 
-    std.debug.print("{s}{s:<60}{s} {s}{s}{s}\n", .{ blue, logo_lines.next().?, reset, blue, user_at_hostname, reset });
+    std.debug.print("{s}{s:<60}{s} {s}{s}{s}{s}\n", .{ blue, logo_lines.next().?, reset, blue, bold, user_at_hostname, reset });
     std.debug.print("{s}{s:<60}{s} {s}\n", .{ blue, logo_lines.next().?, reset, "-----------------" });
-    std.debug.print("{s}{s:<60}{s} Distro: {s}\n", .{ blue, logo_lines.next().?, reset, distro_name });
-    std.debug.print("{s}{s:<60}{s} DE/WM: {s}\n", .{ blue, logo_lines.next().?, reset, desktop_env });
-    std.debug.print("{s}{s:<60}{s} Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, kernel_version });
-    std.debug.print("{s}{s:<60}{s} Uptime: {s}", .{ blue, logo_lines.next().?, reset, uptime });
-    std.debug.print("{s}{s:<60}{s} Shell: {s}\n", .{ blue, logo_lines.next().?, reset, shell_version });
-    std.debug.print("{s}{s:<60}{s} Packages: {}\n", .{ blue, logo_lines.next().?, reset, package_count });
-    std.debug.print("{s}{s:<60}{s} Hardware Model: {s}\n", .{ blue, logo_lines.next().?, reset, hardware_model });
-    std.debug.print("{s}{s:<60}{s} CPU: {s}\n", .{ blue, logo_lines.next().?, reset, cpu });
-    std.debug.print("{s}{s:<60}{s} GPU: {s}\n", .{ blue, logo_lines.next().?, reset, gpu });
-    std.debug.print("{s}{s:<60}{s} Terminal: {s}\n", .{ blue, logo_lines.next().?, reset, terminal_name });
-    std.debug.print("{s}{s:<60}{s} Theme: {s}\n", .{ blue, logo_lines.next().?, reset, theme });
-    std.debug.print("{s}{s:<60}{s} Icons: {s}\n", .{ blue, logo_lines.next().?, reset, icons });
-    std.debug.print("{s}{s:<60}{s} Memory: {s}\n", .{ blue, logo_lines.next().?, reset, memory_info });
+
+    // Print each line with the label in bold
+    std.debug.print("{s}{s:<60}{s} {s}Distro: {s}\n", .{ blue, logo_lines.next().?, reset, bold, distro_name });
+    std.debug.print("{s}{s:<60}{s} {s}DE/WM: {s}\n", .{ blue, logo_lines.next().?, reset, bold, desktop_env });
+    std.debug.print("{s}{s:<60}{s} {s}Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, bold, kernel_version });
+    std.debug.print("{s}{s:<60}{s} {s}Uptime: {s}", .{ blue, logo_lines.next().?, reset, bold, uptime });
+    std.debug.print("{s}{s:<60}{s} {s}Shell: {s}\n", .{ blue, logo_lines.next().?, reset, bold, shell_version });
+    std.debug.print("{s}{s:<60}{s} {s}Packages: {}\n", .{ blue, logo_lines.next().?, reset, bold, package_count });
+    std.debug.print("{s}{s:<60}{s} {s}Hardware Model: {s}\n", .{ blue, logo_lines.next().?, reset, bold, hardware_model });
+    std.debug.print("{s}{s:<60}{s} {s}CPU: {s}\n", .{ blue, logo_lines.next().?, reset, bold, cpu });
+    std.debug.print("{s}{s:<60}{s} {s}GPU: {s}\n", .{ blue, logo_lines.next().?, reset, bold, gpu });
+    std.debug.print("{s}{s:<60}{s} {s}Terminal: {s}\n", .{ blue, logo_lines.next().?, reset, bold, terminal_name });
+    std.debug.print("{s}{s:<60}{s} {s}Theme: {s}\n", .{ blue, logo_lines.next().?, reset, bold, theme });
+    std.debug.print("{s}{s:<60}{s} {s}Icons: {s}\n", .{ blue, logo_lines.next().?, reset, bold, icons });
+    std.debug.print("{s}{s:<60}{s} {s}Memory: {s}\n", .{ blue, logo_lines.next().?, reset, bold, memory_info });
 
     // Print the remaining lines of the logo (if any)
     while (logo_lines.next()) |logo_line| {
@@ -52,10 +55,8 @@ fn printColorGrid() void {
     const colors = [_]u8{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
     for (colors) |color| {
         std.debug.print("\x1b[48;5;{d}m  \x1b[0m", .{color});
-
         std.debug.print(" ", .{});
     }
-
     std.debug.print("\n", .{});
 }
 fn getDistroLogo(distro_name: []const u8) []const u8 {
