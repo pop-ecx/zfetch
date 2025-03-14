@@ -30,6 +30,9 @@ You can also download pre-built binaries from the releases page
 Kali
 ![Kali](2025-03-11_15-43.png)
 
+Arch
+![Arch](arch.jpeg)
+
 Ubuntu
 ![ubuntu](2025-03-11_15-55.png)
 
