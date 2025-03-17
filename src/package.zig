@@ -20,8 +20,8 @@ pub fn getInstalledPackagesCount(allocator: std.mem.Allocator) !usize {
 }
 
 fn getArchPackageCount(allocator: std.mem.Allocator) !usize {
-    _ = allocator;
-    var dir = try std.fs.cwd().openIterableDir("/var/lib/pacman/local", .{});
+    _ = allocator; // Allocator is unused in this function, but kept for compatibility
+    var dir = try std.fs.cwd().openDir("/var/lib/pacman/local", .{});
     defer dir.close();
 
     var count: usize = 0;
@@ -57,7 +57,7 @@ fn getDebianPackageCount(allocator: std.mem.Allocator) !usize {
 }
 
 fn getFedoraPackageCount(allocator: std.mem.Allocator) !usize {
-    var process = std.ChildProcess.init(&.{ "rpm", "-qa", "--qf", "%{NAME}\n" }, allocator);
+    var process = std.process.Child.init(&.{ "rpm", "-qa", "--qf", "%{NAME}\n" }, allocator);
 
     process.stdout_behavior = .Pipe;
     process.stderr_behavior = .Pipe;

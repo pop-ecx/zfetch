@@ -63,7 +63,7 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
     // Normalize the distro name (e.g., extract "Parrot" from "Parrot Security")
     const normalized_name = normalizeDistroName(distro_name);
 
-    const logos = std.ComptimeStringMap([]const u8, .{
+    const logos = std.StaticStringMap([]const u8).initComptime(.{
         .{
             "Arch",
             \\                  .

@@ -49,7 +49,7 @@ pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
 
 pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
     // Get the current shell
-    const shell_path = std.os.getenv("SHELL") orelse return try allocator.dupe(u8, "Unknown");
+    const shell_path = std.posix.getenv("SHELL") orelse return try allocator.dupe(u8, "Unknown");
 
     // Extract the shell name (e.g., "bash" or "zsh") from the path
     const shell_name = std.fs.path.basename(shell_path);
@@ -64,9 +64,9 @@ pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
 
 pub fn userAndHostname(allocator: std.mem.Allocator) ![]u8 {
     //user and hostname info printed on top
-    const user = std.os.getenv("USER") orelse return try allocator.dupe(u8, "Unknown");
+    const user = std.posix.getenv("USER") orelse return try allocator.dupe(u8, "Unknown");
     var hostname_buf: [64]u8 = undefined; // Buffer to store the hostname
-    const hostname = std.os.gethostname(&hostname_buf) catch "Unknown";
+    const hostname = std.posix.gethostname(&hostname_buf) catch "Unknown";
     return try std.fmt.allocPrint(allocator, "{s}@{s}", .{ user, hostname });
 }
 
