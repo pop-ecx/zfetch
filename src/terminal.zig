@@ -7,7 +7,7 @@ pub fn getTerminal(allocator: std.mem.Allocator) ![]u8 {
     // Traverse up the process tree until we find the terminal emulator
     while (true) {
         // Construct the path to the /proc/<pid>/stat file
-        var stat_path = try std.fmt.allocPrint(allocator, "/proc/{}/stat", .{pid});
+        const stat_path = try std.fmt.allocPrint(allocator, "/proc/{}/stat", .{pid});
         defer allocator.free(stat_path);
 
         // Read the stat file to get the parent PID (PPID)
@@ -22,7 +22,7 @@ pub fn getTerminal(allocator: std.mem.Allocator) ![]u8 {
         const ppid = try parsePpidFromStat(stat_str);
 
         // Construct the path to the /proc/<pid>/cmdline file
-        var cmdline_path = try std.fmt.allocPrint(allocator, "/proc/{}/cmdline", .{pid});
+        const cmdline_path = try std.fmt.allocPrint(allocator, "/proc/{}/cmdline", .{pid});
         defer allocator.free(cmdline_path);
 
         // Read the cmdline file to get the command line of the process
@@ -57,7 +57,7 @@ fn parsePpidFromStat(stat_str: []const u8) !i32 {
 
     // The second field is the executable name, which can contain spaces and parentheses.
     // We need to find the closing parenthesis to correctly parse the PPID.
-    var executable_name = iter.next() orelse return error.InvalidStatFile;
+    const executable_name = iter.next() orelse return error.InvalidStatFile;
     if (std.mem.endsWith(u8, executable_name, ")")) {
         // The executable name is fully contained in this field.
         // The next field is the state, and the one after that is the PPID.

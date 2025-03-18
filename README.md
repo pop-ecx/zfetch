@@ -1,7 +1,7 @@
 [![License: Apache2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/apache-2-0) 
 
 # Zfetch
-A small neofetch clone in zig 0.11
+A small neofetch clone in zig 0.13
 
 ## Background
 Zfetch is a blazingly fast system information fetching tool written in zig.

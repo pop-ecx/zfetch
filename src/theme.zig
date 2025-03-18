@@ -6,7 +6,7 @@ const GtkSettings = struct {
 };
 
 pub fn getGtkSettings(allocator: std.mem.Allocator) !GtkSettings {
-    const home_dir = std.os.getenv("HOME") orelse return error.HomeDirNotFound;
+    const home_dir = std.posix.getenv("HOME") orelse return error.HomeDirNotFound;
 
     // let's check the following common paths for the gtk settings file
     const paths_to_try = [_][]const u8{
@@ -102,7 +102,7 @@ fn getGtkSettingsFromGsettings(allocator: std.mem.Allocator) !GtkSettings {
 }
 
 fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
-    const result = try std.ChildProcess.exec(.{
+    const result = try std.process.Child.run(.{
         .allocator = allocator,
         .argv = argv,
     });
