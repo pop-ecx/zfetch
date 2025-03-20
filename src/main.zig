@@ -11,6 +11,33 @@ const theme = @import("theme.zig");
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
 
+    const args = try std.process.argsAlloc(allocator);
+    defer std.process.argsFree(allocator, args);
+
+    var color: []const u8 = "\x1b[38;2;135;206;250m";
+
+    if (args.len > 1) {
+        if (std.mem.eql(u8, args[1], "--red")) {
+            color = "\x1b[31m";
+        } else if (std.mem.eql(u8, args[1], "--green")) {
+            color = "\x1b[32m";
+        } else if (std.mem.eql(u8, args[1], "--yellow")) {
+            color = "\x1b[33m";
+        } else if (std.mem.eql(u8, args[1], "--blue")) {
+            color = "\x1b[34m";
+        } else if (std.mem.eql(u8, args[1], "--magenta")) {
+            color = "\x1b[35m";
+        } else if (std.mem.eql(u8, args[1], "--cyan")) {
+            color = "\x1b[36m";
+        } else if (std.mem.eql(u8, args[1], "--white")) {
+            color = "\x1b[37m";
+        } else if (std.mem.eql(u8, args[1], "--orange")) {
+            color = "\x1b[38;5;208m";
+        } else if (std.mem.eql(u8, args[1], "--purple")) {
+            color = "\x1b[38;5;54m";
+        }
+    }
+
     // distro info
     const distro_info = try distro.getDistroInfo(allocator);
     defer allocator.free(distro_info);
@@ -65,5 +92,5 @@ pub fn main() !void {
     }
 
     // Print ASCII art n sys info
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname, package_count, gtk_settings.theme, gtk_settings.icons);
+    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, hardware_model, cpu, gpu, terminal_name, memory_info, user_at_hostname, package_count, gtk_settings.theme, gtk_settings.icons, color);
 }

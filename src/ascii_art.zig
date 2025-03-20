@@ -15,6 +15,7 @@ pub fn printNeofetchStyle(
     package_count: usize,
     theme: []const u8,
     icons: []const u8,
+    color: []const u8,
 ) !void {
     const logo = getDistroLogo(distro_name);
 
@@ -26,27 +27,27 @@ pub fn printNeofetchStyle(
     // Split the logo into lines
     var logo_lines = std.mem.split(u8, logo, "\n");
 
-    std.debug.print("{s}{s:<60}{s} {s}{s}{s}{s}\n", .{ blue, logo_lines.next().?, reset, blue, bold, user_at_hostname, reset });
-    std.debug.print("{s}{s:<60}{s} {s}\n", .{ blue, logo_lines.next().?, reset, "-----------------" });
+    std.debug.print("{s}{s:<60}{s} {s}{s}{s}{s}\n", .{ color, logo_lines.next().?, reset, blue, bold, user_at_hostname, reset });
+    std.debug.print("{s}{s:<60}{s} {s}\n", .{ color, logo_lines.next().?, reset, "-----------------" });
 
     // Print each line with the label in bold
-    std.debug.print("{s}{s:<60}{s} {s}Distro: {s}\n", .{ blue, logo_lines.next().?, reset, bold, distro_name });
-    std.debug.print("{s}{s:<60}{s} {s}DE/WM: {s}\n", .{ blue, logo_lines.next().?, reset, bold, desktop_env });
-    std.debug.print("{s}{s:<60}{s} {s}Kernel Version: {s}", .{ blue, logo_lines.next().?, reset, bold, kernel_version });
-    std.debug.print("{s}{s:<60}{s} {s}Uptime: {s}", .{ blue, logo_lines.next().?, reset, bold, uptime });
-    std.debug.print("{s}{s:<60}{s} {s}Shell: {s}\n", .{ blue, logo_lines.next().?, reset, bold, shell_version });
-    std.debug.print("{s}{s:<60}{s} {s}Packages: {}\n", .{ blue, logo_lines.next().?, reset, bold, package_count });
-    std.debug.print("{s}{s:<60}{s} {s}Hardware Model: {s}\n", .{ blue, logo_lines.next().?, reset, bold, hardware_model });
-    std.debug.print("{s}{s:<60}{s} {s}CPU: {s}\n", .{ blue, logo_lines.next().?, reset, bold, cpu });
-    std.debug.print("{s}{s:<60}{s} {s}GPU: {s}\n", .{ blue, logo_lines.next().?, reset, bold, gpu });
-    std.debug.print("{s}{s:<60}{s} {s}Terminal: {s}\n", .{ blue, logo_lines.next().?, reset, bold, terminal_name });
-    std.debug.print("{s}{s:<60}{s} {s}Theme: {s}\n", .{ blue, logo_lines.next().?, reset, bold, theme });
-    std.debug.print("{s}{s:<60}{s} {s}Icons: {s}\n", .{ blue, logo_lines.next().?, reset, bold, icons });
-    std.debug.print("{s}{s:<60}{s} {s}Memory: {s}\n", .{ blue, logo_lines.next().?, reset, bold, memory_info });
+    std.debug.print("{s}{s:<60}{s} {s}Distro: {s}\n", .{ color, logo_lines.next().?, reset, bold, distro_name });
+    std.debug.print("{s}{s:<60}{s} {s}DE/WM: {s}\n", .{ color, logo_lines.next().?, reset, bold, desktop_env });
+    std.debug.print("{s}{s:<60}{s} {s}Kernel Version: {s}", .{ color, logo_lines.next().?, reset, bold, kernel_version });
+    std.debug.print("{s}{s:<60}{s} {s}Uptime: {s}", .{ color, logo_lines.next().?, reset, bold, uptime });
+    std.debug.print("{s}{s:<60}{s} {s}Shell: {s}\n", .{ color, logo_lines.next().?, reset, bold, shell_version });
+    std.debug.print("{s}{s:<60}{s} {s}Packages: {}\n", .{ color, logo_lines.next().?, reset, bold, package_count });
+    std.debug.print("{s}{s:<60}{s} {s}Hardware Model: {s}\n", .{ color, logo_lines.next().?, reset, bold, hardware_model });
+    std.debug.print("{s}{s:<60}{s} {s}CPU: {s}\n", .{ color, logo_lines.next().?, reset, bold, cpu });
+    std.debug.print("{s}{s:<60}{s} {s}GPU: {s}\n", .{ color, logo_lines.next().?, reset, bold, gpu });
+    std.debug.print("{s}{s:<60}{s} {s}Terminal: {s}\n", .{ color, logo_lines.next().?, reset, bold, terminal_name });
+    std.debug.print("{s}{s:<60}{s} {s}Theme: {s}\n", .{ color, logo_lines.next().?, reset, bold, theme });
+    std.debug.print("{s}{s:<60}{s} {s}Icons: {s}\n", .{ color, logo_lines.next().?, reset, bold, icons });
+    std.debug.print("{s}{s:<60}{s} {s}Memory: {s}\n", .{ color, logo_lines.next().?, reset, bold, memory_info });
 
     // Print the remaining lines of the logo (if any)
     while (logo_lines.next()) |logo_line| {
-        std.debug.print("{s}{s}{s}\n", .{ blue, logo_line, reset });
+        std.debug.print("{s}{s}{s}\n", .{ color, logo_line, reset });
     }
     printColorGrid();
 }
