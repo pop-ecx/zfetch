@@ -40,3 +40,5 @@ Fedora
 ![Fedora](2025-03-11_15-51.png)
 
 > This is still in beta, alot to still do, so feel free to contribute to it by checking out the [contribution guide](https://github.com/pop-ecx/zfetch/blob/master/contributing.md)
+
+> The builds are done in debug mode as the project hasn't reached v1.0.0 yet.
