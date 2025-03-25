@@ -21,7 +21,7 @@ pub fn getInstalledPackagesCount(allocator: std.mem.Allocator) !usize {
 
 fn getArchPackageCount(allocator: std.mem.Allocator) !usize {
     _ = allocator; // Allocator is unused in this function, but kept for compatibility
-    var dir = try std.fs.cwd().openDir("/var/lib/pacman/local", .{});
+    var dir = try std.fs.cwd().openDir("/var/lib/pacman/local", .{ .iterate = true });
     defer dir.close();
 
     var count: usize = 0;
