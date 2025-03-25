@@ -8,28 +8,22 @@ const GtkSettings = struct {
 pub fn getGtkSettings(allocator: std.mem.Allocator) !GtkSettings {
     const home_dir = std.posix.getenv("HOME") orelse return error.HomeDirNotFound;
 
-    // let's check the following common paths for the gtk settings file
     const paths_to_try = [_][]const u8{
         try std.fs.path.join(allocator, &[_][]const u8{ home_dir, ".config", "gtk-3.0", "settings.ini" }),
         "/etc/gtk-3.0/settings.ini",
         "/etc/xdg/gtk-3.0/settings.ini",
         "/usr/share/gtk-3.0/settings.ini",
     };
-    defer {
-        // Free only the dynamically allocated path
-        allocator.free(paths_to_try[0]);
-    }
+    defer allocator.free(paths_to_try[0]);
 
     for (paths_to_try) |path| {
         const file = std.fs.cwd().openFile(path, .{}) catch |err| {
-            // Only print an error if the error is NOT FileNotFound
             if (err != error.FileNotFound) {
                 std.debug.print("Failed to open file: {s}, error: {}\n", .{ path, err });
             }
             continue;
         };
 
-        // Try to parse the settings
         const settings = parseGtkSettings(allocator, file) catch |err| {
             std.debug.print("Failed to parse file: {s}, error: {}\n", .{ path, err });
             continue;
@@ -38,7 +32,12 @@ pub fn getGtkSettings(allocator: std.mem.Allocator) !GtkSettings {
         return settings;
     }
 
-    return getGtkSettingsFromGsettings(allocator);
+    return getGtkSettingsFromGsettings(allocator) catch {
+        return GtkSettings{
+            .theme = try allocator.dupe(u8, "Unknown"),
+            .icons = try allocator.dupe(u8, "Unknown"),
+        };
+    };
 }
 
 fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSettings {
@@ -57,7 +56,6 @@ fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSetting
 
     var lines = std.mem.split(u8, buffer, "\n");
     while (lines.next()) |line| {
-        // Trim leading and trailing whitespace
         const trimmed_line = std.mem.trim(u8, line, " \t");
 
         if (std.mem.startsWith(u8, trimmed_line, "gtk-theme-name")) {
@@ -85,36 +83,45 @@ fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSetting
 }
 
 fn getGtkSettingsFromGsettings(allocator: std.mem.Allocator) !GtkSettings {
-    // Run `gsettings get org.gnome.desktop.interface gtk-theme`
-    // In future we can add support for other desktop environments
-    const theme_result = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.gnome.desktop.interface", "gtk-theme" });
-    defer allocator.free(theme_result);
+    const gnome_theme_result = runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.gnome.desktop.interface", "gtk-theme" });
+    const gnome_icons_result = runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.gnome.desktop.interface", "icon-theme" });
 
-    // Run `gsettings get org.gnome.desktop.interface icon-theme`
-    const icons_result = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.gnome.desktop.interface", "icon-theme" });
-    defer allocator.free(icons_result);
+    if (gnome_theme_result == error.CommandFailed or gnome_icons_result == error.CommandFailed) {
+        const mate_theme = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.mate.interface", "gtk-theme" });
+        defer allocator.free(mate_theme);
+        const mate_icons = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.mate.interface", "icon-theme" });
+        defer allocator.free(mate_icons);
 
-    // Remove single quotes and trim whitespace from the results
-    const theme = try allocator.dupe(u8, std.mem.trim(u8, theme_result, " '"));
-    const icons = try allocator.dupe(u8, std.mem.trim(u8, icons_result, " '"));
+        const theme = try allocator.dupe(u8, std.mem.trim(u8, mate_theme, " '\n"));
+        const icons = try allocator.dupe(u8, std.mem.trim(u8, mate_icons, " '\n"));
+        return GtkSettings{ .theme = theme, .icons = icons };
+    } else {
+        const gnome_theme = try gnome_theme_result;
+        defer allocator.free(gnome_theme);
+        const gnome_icons = try gnome_icons_result;
+        defer allocator.free(gnome_icons);
 
-    return GtkSettings{ .theme = theme, .icons = icons };
+        const theme = try allocator.dupe(u8, std.mem.trim(u8, gnome_theme, " '\n"));
+        const icons = try allocator.dupe(u8, std.mem.trim(u8, gnome_icons, " '\n"));
+        return GtkSettings{ .theme = theme, .icons = icons };
+    }
 }
+pub fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
+    var result = std.ArrayList(u8).init(allocator);
+    defer result.deinit();
 
-fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
-    const result = try std.process.Child.run(.{
-        .allocator = allocator,
-        .argv = argv,
-    });
-    defer {
-        allocator.free(result.stdout);
-        allocator.free(result.stderr);
-    }
+    var child = std.process.Child.init(argv, allocator);
+    child.stdout_behavior = .Pipe;
+    child.stderr_behavior = .Pipe;
 
-    if (result.term.Exited != 0) {
-        return error.CommandFailed;
-    }
+    try child.spawn();
 
-    const output = std.mem.trimRight(u8, result.stdout, "\n");
-    return try allocator.dupe(u8, output);
+    const stdout = try child.stdout.?.reader().readAllAlloc(allocator, std.math.maxInt(usize));
+    defer allocator.free(stdout);
+
+    try result.appendSlice(stdout);
+
+    _ = try child.wait();
+
+    return result.toOwnedSlice();
 }

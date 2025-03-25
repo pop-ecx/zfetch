@@ -53,6 +53,7 @@ pub fn main() !void {
     defer allocator.free(kernel_version);
 
     const shell_version = try system.getShellVersion(allocator);
+    defer allocator.free(shell_version);
 
     const uptime = try system.executeCommand(allocator, &[_][]const u8{ "uptime", "-p" });
     defer allocator.free(uptime);
