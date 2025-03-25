@@ -92,8 +92,8 @@ fn getGtkSettingsFromGsettings(allocator: std.mem.Allocator) !GtkSettings {
         const mate_icons = try runCommand(allocator, &[_][]const u8{ "gsettings", "get", "org.mate.interface", "icon-theme" });
         defer allocator.free(mate_icons);
 
-        const theme = try allocator.dupe(u8, std.mem.trim(u8, mate_theme, " '"));
-        const icons = try allocator.dupe(u8, std.mem.trim(u8, mate_icons, " '"));
+        const theme = try allocator.dupe(u8, std.mem.trim(u8, mate_theme, " '\n"));
+        const icons = try allocator.dupe(u8, std.mem.trim(u8, mate_icons, " '\n"));
         return GtkSettings{ .theme = theme, .icons = icons };
     } else {
         const gnome_theme = try gnome_theme_result;
