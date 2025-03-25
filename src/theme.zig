@@ -101,26 +101,27 @@ fn getGtkSettingsFromGsettings(allocator: std.mem.Allocator) !GtkSettings {
         const gnome_icons = try gnome_icons_result;
         defer allocator.free(gnome_icons);
 
-        const theme = try allocator.dupe(u8, std.mem.trim(u8, gnome_theme, " '"));
-        const icons = try allocator.dupe(u8, std.mem.trim(u8, gnome_icons, " '"));
+        const theme = try allocator.dupe(u8, std.mem.trim(u8, gnome_theme, " '\n"));
+        const icons = try allocator.dupe(u8, std.mem.trim(u8, gnome_icons, " '\n"));
         return GtkSettings{ .theme = theme, .icons = icons };
     }
 }
+pub fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
+    var result = std.ArrayList(u8).init(allocator);
+    defer result.deinit();
 
-fn runCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
-    const result = try std.process.Child.run(.{
-        .allocator = allocator,
-        .argv = argv,
-    });
-    defer {
-        allocator.free(result.stdout);
-        allocator.free(result.stderr);
-    }
+    var child = std.process.Child.init(argv, allocator);
+    child.stdout_behavior = .Pipe;
+    child.stderr_behavior = .Pipe;
 
-    if (result.term.Exited != 0) {
-        return error.CommandFailed;
-    }
+    try child.spawn();
 
-    const output = std.mem.trimRight(u8, result.stdout, "\n");
-    return try allocator.dupe(u8, output);
+    const stdout = try child.stdout.?.reader().readAllAlloc(allocator, std.math.maxInt(usize));
+    defer allocator.free(stdout);
+
+    try result.appendSlice(stdout);
+
+    _ = try child.wait();
+
+    return result.toOwnedSlice();
 }
