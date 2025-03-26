@@ -3,50 +3,6 @@ const distro = @import("distro.zig");
 const ascii_art = @import("ascii_art.zig");
 const hardware = @import("hardware.zig");
 
-pub fn printSystemInfo(allocator: std.mem.Allocator) !void {
-    // distro info
-    const distro_info = try distro.getDistroInfo(allocator);
-    defer allocator.free(distro_info);
-
-    // Parse distro name
-    const distro_name = try distro.parseDistroName(allocator, distro_info);
-    defer allocator.free(distro_name);
-
-    // Get DE
-    const desktop_env = std.os.getenv("DESKTOP_SESSION") orelse std.os.getenv("XDG_CURRENT_DESKTOP") orelse "Unknown";
-
-    // Linux kernel version
-    const kernel_version = try executeCommand(allocator, &[_][]const u8{ "uname", "-r" });
-    defer allocator.free(kernel_version);
-
-    // sys uptime
-    const uptime = try getUptime(allocator);
-    defer allocator.free(uptime);
-
-    // mem info
-    const memory_info = try getMemoryInfo(std.heap.page_allocator);
-    defer std.heap.page_allocator.free(memory_info);
-
-    // bash/zsh/fish version
-    const shell_version = try getShellVersion(allocator);
-    defer allocator.free(shell_version);
-
-    // CPU info
-    const cpu = try hardware.getCPUInfo(allocator);
-    defer allocator.free(cpu);
-
-    // GPU info
-    const gpu = try hardware.getGPUInfo(allocator);
-    defer allocator.free(gpu);
-
-    //user and hostname info
-    const user_at_hostname = try userAndHostname(allocator);
-    defer allocator.free(user_at_hostname);
-
-    // Print ASCII art and sys info
-    try ascii_art.printNeofetchStyle(distro_name, desktop_env, kernel_version, uptime, shell_version, cpu);
-}
-
 pub fn getShellVersion(allocator: std.mem.Allocator) ![]u8 {
     // Get the current shell
     const shell_path = std.posix.getenv("SHELL") orelse return try allocator.dupe(u8, "Unknown");
@@ -92,14 +48,6 @@ fn parseShellVersion(allocator: std.mem.Allocator, shell_name: []const u8, outpu
     }
 
     return try allocator.dupe(u8, "Unknown");
-}
-
-fn getUptime(allocator: std.mem.Allocator) ![]u8 {
-    const uptime_output = try executeCommand(allocator, &[_][]const u8{ "uptime", "-p" });
-    defer allocator.free(uptime_output);
-
-    const uptime = std.mem.trim(u8, uptime_output, "up ");
-    return try allocator.dupe(u8, uptime);
 }
 
 pub fn getMemoryInfo(allocator: std.mem.Allocator) ![]const u8 {
