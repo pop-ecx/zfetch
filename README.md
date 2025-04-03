@@ -1,4 +1,5 @@
 [![License: Apache2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/apache-2-0) 
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/pop-ecx/zfetch/distros.yml)
 
 # Zfetch
 A small neofetch clone in zig 0.13
