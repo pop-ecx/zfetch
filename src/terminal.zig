@@ -1,16 +1,12 @@
 const std = @import("std");
 
 pub fn getTerminal(allocator: std.mem.Allocator) ![]u8 {
-    // Get the PID of the current process
     var pid = std.os.linux.getpid();
 
-    // Traverse up the process tree until we find the terminal emulator
     while (true) {
-        // Construct the path to the /proc/<pid>/stat file
         const stat_path = try std.fmt.allocPrint(allocator, "/proc/{}/stat", .{pid});
         defer allocator.free(stat_path);
 
-        // Read the stat file to get the parent PID (PPID)
         const stat_file = try std.fs.openFileAbsolute(stat_path, .{});
         defer stat_file.close();
 
@@ -18,14 +14,11 @@ pub fn getTerminal(allocator: std.mem.Allocator) ![]u8 {
         const stat_len = try stat_file.readAll(&stat_buf);
         const stat_str = stat_buf[0..stat_len];
 
-        // Parse the stat file to get the PPID
         const ppid = try parsePpidFromStat(stat_str);
 
-        // Construct the path to the /proc/<pid>/cmdline file
         const cmdline_path = try std.fmt.allocPrint(allocator, "/proc/{}/cmdline", .{pid});
         defer allocator.free(cmdline_path);
 
-        // Read the cmdline file to get the command line of the process
         const cmdline_file = try std.fs.openFileAbsolute(cmdline_path, .{});
         defer cmdline_file.close();
 
