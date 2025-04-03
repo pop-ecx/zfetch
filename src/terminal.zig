@@ -76,10 +76,7 @@ fn parsePpidFromStat(stat_str: []const u8) !i32 {
 }
 
 fn isTerminalEmulator(process_name: []const u8) bool {
-    const terminal_emulators = [_][]const u8{
-        "alacritty", "kitty", "gnome-terminal", "xterm", "konsole", "urxvt", "st", "terminator", "tilix", "xfce4-terminal",
-    };
-
+    const terminal_emulators = [_][]const u8{ "alacritty", "kitty", "gnome-terminal", "xterm", "konsole", "urxvt", "st", "terminator", "tilix", "xfce4-terminal", "tmux", "screen", "terminology", "lxterminal", "rxvt", "sakura", "mate-terminal", "terminology", "konsole", "terminator" };
     for (terminal_emulators) |emulator| {
         if (std.mem.eql(u8, process_name, emulator)) {
             return true;
