@@ -2,7 +2,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/pop-ecx/zfetch/distros.yml)
 
 # Zfetch
-A small neofetch clone in zig 0.13
+A small neofetch clone in zig 0.14
 
 ## Background
 Zfetch is a blazingly fast system information fetching tool written in zig.
