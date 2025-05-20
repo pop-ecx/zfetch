@@ -29,7 +29,7 @@ pub fn getCPUInfo(allocator: std.mem.Allocator) ![]u8 {
     var model_name: []const u8 = "Unknown";
     var frequency: []const u8 = "";
 
-    var lines = std.mem.split(u8, lscpu_output, "\n");
+    var lines = std.mem.splitSequence(u8, lscpu_output, "\n");
     while (lines.next()) |line| {
         if (std.mem.startsWith(u8, line, "Model name:")) {
             model_name = std.mem.trim(u8, line["Model name:".len..], " ");
@@ -49,7 +49,7 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
     defer allocator.free(lspci_output);
 
     // Parse the GPU information
-    var lines = std.mem.split(u8, lspci_output, "\n");
+    var lines = std.mem.splitSequence(u8, lspci_output, "\n");
     while (lines.next()) |line| {
         if (std.mem.indexOf(u8, line, "VGA compatible controller:")) |vga_index| {
             const gpu_info = std.mem.trim(u8, line[vga_index + "VGA compatible controller:".len ..], " ");

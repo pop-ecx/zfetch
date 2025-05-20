@@ -46,7 +46,7 @@ fn getDebianPackageCount(allocator: std.mem.Allocator) !usize {
     _ = try file.readAll(buffer);
 
     var count: usize = 0;
-    var lines = std.mem.split(u8, buffer, "\n");
+    var lines = std.mem.splitSequence(u8, buffer, "\n");
     while (lines.next()) |line| {
         if (std.mem.startsWith(u8, line, "Package: ")) {
             count += 1;
@@ -79,7 +79,7 @@ fn getFedoraPackageCount(allocator: std.mem.Allocator) !usize {
     }
 
     var count: usize = 0;
-    var lines = std.mem.split(u8, stdout, "\n");
+    var lines = std.mem.splitSequence(u8, stdout, "\n");
     while (lines.next()) |line| {
         if (line.len > 0) {
             count += 1;

@@ -25,7 +25,7 @@ pub fn printNeofetchStyle(
     const reset = "\x1b[0m"; // Reset formatting
 
     // Split the logo into lines
-    var logo_lines = std.mem.split(u8, logo, "\n");
+    var logo_lines = std.mem.splitSequence(u8, logo, "\n");
 
     std.debug.print("{s}{s:<60}{s} {s}{s}{s}{s}\n", .{ color, logo_lines.next().?, reset, blue, bold, user_at_hostname, reset });
     std.debug.print("{s}{s:<60}{s} {s}\n", .{ color, logo_lines.next().?, reset, "-----------------" });
