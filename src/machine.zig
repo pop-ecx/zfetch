@@ -5,7 +5,7 @@ pub fn getHardwareModel(allocator: std.mem.Allocator) ![]u8 {
     defer allocator.free(hostnamectl_output);
 
     // Parse the hardware model from the output
-    var lines = std.mem.split(u8, hostnamectl_output, "\n");
+    var lines = std.mem.splitSequence(u8, hostnamectl_output, "\n");
     while (lines.next()) |line| {
         if (std.mem.startsWith(u8, line, "  Hardware Model:")) {
             const model = std.mem.trim(u8, line["  Hardware Model:".len..], " ");

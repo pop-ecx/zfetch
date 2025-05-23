@@ -54,7 +54,7 @@ fn parseGtkSettings(allocator: std.mem.Allocator, file: std.fs.File) !GtkSetting
     var theme_found = false;
     var icons_found = false;
 
-    var lines = std.mem.split(u8, buffer, "\n");
+    var lines = std.mem.splitSequence(u8, buffer, "\n");
     while (lines.next()) |line| {
         const trimmed_line = std.mem.trim(u8, line, " \t");
 

@@ -6,7 +6,7 @@ pub fn getDistroInfo(allocator: std.mem.Allocator) ![]u8 {
 }
 
 pub fn parseDistroName(allocator: std.mem.Allocator, distro_info: []const u8) ![]u8 {
-    var lines = std.mem.split(u8, distro_info, "\n");
+    var lines = std.mem.splitSequence(u8, distro_info, "\n");
     while (lines.next()) |line| {
         if (std.mem.startsWith(u8, line, "PRETTY_NAME=")) {
             const name = line["PRETTY_NAME=".len..];
@@ -18,7 +18,7 @@ pub fn parseDistroName(allocator: std.mem.Allocator, distro_info: []const u8) ![
 }
 
 pub fn parseDistroFamily(allocator: std.mem.Allocator, distro_info: []const u8) ![]u8 {
-    var lines = std.mem.split(u8, distro_info, "\n");
+    var lines = std.mem.splitSequence(u8, distro_info, "\n");
     while (lines.next()) |line| {
         if (std.mem.startsWith(u8, line, "ID=")) {
             const id = line["ID=".len..];

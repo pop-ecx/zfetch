@@ -39,7 +39,7 @@ pub fn getTerminal(allocator: std.mem.Allocator) ![]u8 {
         // Split cmdline into arguments and check each
         // we do this because the terminator cmdline process
         // has an argument which is what we have to use to identify terminator
-        var args_iter = std.mem.split(u8, cmdline_str, &[_]u8{0});
+        var args_iter = std.mem.splitSequence(u8, cmdline_str, &[_]u8{0});
         while (args_iter.next()) |arg| {
             if (arg.len == 0) continue; // Skip empty args (trailing nulls)
             const arg_basename = std.fs.path.basename(arg);
@@ -56,7 +56,7 @@ pub fn getTerminal(allocator: std.mem.Allocator) ![]u8 {
 }
 
 fn parsePpidFromStat(stat_str: []const u8) !i32 {
-    var iter = std.mem.split(u8, stat_str, " ");
+    var iter = std.mem.splitSequence(u8, stat_str, " ");
     _ = iter.next();
     const executable_name = iter.next() orelse return error.InvalidStatFile;
     if (std.mem.endsWith(u8, executable_name, ")")) {

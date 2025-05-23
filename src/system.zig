@@ -61,7 +61,7 @@ pub fn getMemoryInfo(allocator: std.mem.Allocator) ![]const u8 {
     var mem_total: u64 = 0;
     var mem_available: u64 = 0;
 
-    var lines = std.mem.split(u8, meminfo_str, "\n");
+    var lines = std.mem.splitSequence(u8, meminfo_str, "\n");
     while (lines.next()) |line| {
         if (std.mem.startsWith(u8, line, "MemTotal:")) {
             mem_total = try parseMemInfoValue(line);
@@ -80,7 +80,7 @@ pub fn getMemoryInfo(allocator: std.mem.Allocator) ![]const u8 {
 }
 
 fn parseMemInfoValue(line: []const u8) !u64 {
-    var iter = std.mem.split(u8, line, " ");
+    var iter = std.mem.splitSequence(u8, line, " ");
     _ = iter.next(); // Skip the label (e.g., "MemTotal:")
 
     // Find the first non-empty token
