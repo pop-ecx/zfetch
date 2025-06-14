@@ -2,8 +2,6 @@
 Hi, thank you for your interest in wanting to contribute. 
 This shows you're an idle nerd.
 
-If none of that works for you, here's how you can contribute
-
 ## 1. Fork the repo
 - Visit the [repository](https://github.com/pop-ecx/zfetch.git) on GitHub.
 - Click the **Fork** button in the top-right corner to create your copy of the repo.
