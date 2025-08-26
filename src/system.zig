@@ -101,8 +101,8 @@ fn parseMemInfoValue(line: []const u8) !u64 {
 }
 
 pub fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
-    var result = std.ArrayList(u8).init(allocator);
-    defer result.deinit();
+    var result = std.ArrayListUnmanaged(u8){}; // Andrew Kelley made me do this
+    defer result.deinit(allocator);
 
     var child = std.process.Child.init(argv, allocator);
     child.stdout_behavior = .Pipe;
@@ -110,12 +110,13 @@ pub fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![
 
     try child.spawn();
 
-    const stdout = try child.stdout.?.reader().readAllAlloc(allocator, std.math.maxInt(usize));
+    //const stdout = try child.stdout.?.reader(&buf).readAllAlloc(allocator, std.math.maxInt(usize));
+    const stdout = try child.stdout.?.readToEndAlloc(allocator, std.math.maxInt(usize));
     defer allocator.free(stdout);
 
-    try result.appendSlice(stdout);
+    try result.appendSlice(allocator, stdout);
 
     _ = try child.wait();
 
-    return result.toOwnedSlice();
+    return try result.toOwnedSlice(allocator);
 }
