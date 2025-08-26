@@ -1,5 +1,9 @@
 const std = @import("std");
 
+fn safeNextLine(iter: *std.mem.SplitIterator(u8, .sequence)) []const u8 {
+    return iter.next() orelse "";
+}
+
 pub fn printNeofetchStyle(
     distro_name: []const u8,
     desktop_env: []const u8,
@@ -19,33 +23,30 @@ pub fn printNeofetchStyle(
 ) !void {
     const logo = getDistroLogo(distro_name);
 
-    // ANSI escape codes
-    const blue = "\x1b[38;2;135;206;250m"; // Blue text
-    const bold = "\x1b[1m"; // Bold text
-    const reset = "\x1b[0m"; // Reset formatting
+    const blue = "\x1b[38;2;135;206;250m";
+    const bold = "\x1b[1m";
+    const reset = "\x1b[0m";
 
-    // Split the logo into lines
     var logo_lines = std.mem.splitSequence(u8, logo, "\n");
 
-    std.debug.print("{s}{s:<60}{s} {s}{s}{s}{s}\n", .{ color, logo_lines.next().?, reset, blue, bold, user_at_hostname, reset });
-    std.debug.print("{s}{s:<60}{s} {s}\n", .{ color, logo_lines.next().?, reset, "-----------------" });
+    std.debug.print("{s}{s:<60}{s} {s}{s}{s}{s}\n", .{ color, safeNextLine(&logo_lines), reset, blue, bold, user_at_hostname, reset });
+    std.debug.print("{s}{s:<60}{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, "-----------------" });
 
-    // Print each line with the label in bold
-    std.debug.print("{s}{s:<60}{s} {s}Distro: {s}\n", .{ color, logo_lines.next().?, reset, bold, distro_name });
-    std.debug.print("{s}{s:<60}{s} {s}DE/WM: {s}\n", .{ color, logo_lines.next().?, reset, bold, desktop_env });
-    std.debug.print("{s}{s:<60}{s} {s}Kernel Version: {s}", .{ color, logo_lines.next().?, reset, bold, kernel_version });
-    std.debug.print("{s}{s:<60}{s} {s}Uptime: {s}", .{ color, logo_lines.next().?, reset, bold, uptime });
-    std.debug.print("{s}{s:<60}{s} {s}Shell: {s}\n", .{ color, logo_lines.next().?, reset, bold, shell_version });
-    std.debug.print("{s}{s:<60}{s} {s}Packages: {}\n", .{ color, logo_lines.next().?, reset, bold, package_count });
-    std.debug.print("{s}{s:<60}{s} {s}Hardware Model: {s}\n", .{ color, logo_lines.next().?, reset, bold, hardware_model });
-    std.debug.print("{s}{s:<60}{s} {s}CPU: {s}\n", .{ color, logo_lines.next().?, reset, bold, cpu });
-    std.debug.print("{s}{s:<60}{s} {s}GPU: {s}\n", .{ color, logo_lines.next().?, reset, bold, gpu });
-    std.debug.print("{s}{s:<60}{s} {s}Terminal: {s}\n", .{ color, logo_lines.next().?, reset, bold, terminal_name });
-    std.debug.print("{s}{s:<60}{s} {s}Theme: {s}\n", .{ color, logo_lines.next().?, reset, bold, theme });
-    std.debug.print("{s}{s:<60}{s} {s}Icons: {s}\n", .{ color, logo_lines.next().?, reset, bold, icons });
-    std.debug.print("{s}{s:<60}{s} {s}Memory: {s}\n", .{ color, logo_lines.next().?, reset, bold, memory_info });
+    std.debug.print("{s}{s:<60}{s} {s}Distro: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, distro_name });
+    std.debug.print("{s}{s:<60}{s} {s}DE/WM: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, desktop_env });
+    std.debug.print("{s}{s:<60}{s} {s}Kernel Version: {s}", .{ color, safeNextLine(&logo_lines), reset, bold, kernel_version });
+    std.debug.print("{s}{s:<60}{s} {s}Uptime: {s}", .{ color, safeNextLine(&logo_lines), reset, bold, uptime });
+    std.debug.print("{s}{s:<60}{s} {s}Shell: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, shell_version });
+    std.debug.print("{s}{s:<60}{s} {s}Packages: {}\n", .{ color, safeNextLine(&logo_lines), reset, bold, package_count });
+    std.debug.print("{s}{s:<60}{s} {s}Hardware Model: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, hardware_model });
+    std.debug.print("{s}{s:<60}{s} {s}CPU: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, cpu });
+    std.debug.print("{s}{s:<60}{s} {s}GPU: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, gpu });
+    std.debug.print("{s}{s:<60}{s} {s}Terminal: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, terminal_name });
+    std.debug.print("{s}{s:<60}{s} {s}Theme: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, theme });
+    std.debug.print("{s}{s:<60}{s} {s}Icons: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, icons });
+    std.debug.print("{s}{s:<60}{s} {s}Memory: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, memory_info });
 
-    // Print the remaining lines of the logo (if any)
+    // print remaining logo lines (if longer than info block)
     while (logo_lines.next()) |logo_line| {
         std.debug.print("{s}{s}{s}\n", .{ color, logo_line, reset });
     }

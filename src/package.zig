@@ -64,7 +64,7 @@ fn getFedoraPackageCount(allocator: std.mem.Allocator) !usize {
 
     try process.spawn();
 
-    const stdout = try process.stdout.?.reader().readAllAlloc(allocator, std.math.maxInt(usize));
+    const stdout = try process.stdout.?.readToEndAlloc(allocator, std.math.maxInt(usize));
     defer allocator.free(stdout);
 
     // Wait for the process to finish and check its exit code

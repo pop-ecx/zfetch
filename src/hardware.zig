@@ -61,8 +61,8 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
 }
 
 fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
-    var result = std.ArrayList(u8).init(allocator);
-    defer result.deinit();
+    var result = std.ArrayListUnmanaged(u8){};
+    defer result.deinit(allocator);
 
     var child = std.process.Child.init(argv, allocator);
     child.stdout_behavior = .Pipe;
@@ -70,12 +70,12 @@ fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]con
 
     try child.spawn();
 
-    const stdout = try child.stdout.?.reader().readAllAlloc(allocator, std.math.maxInt(usize));
+    const stdout = try child.stdout.?.readToEndAlloc(allocator, std.math.maxInt(usize));
     defer allocator.free(stdout);
 
-    try result.appendSlice(stdout);
+    try result.appendSlice(allocator, stdout);
 
     _ = try child.wait();
 
-    return result.toOwnedSlice();
+    return result.toOwnedSlice(allocator);
 }
