@@ -1,5 +1,6 @@
 const std = @import("std");
 
+
 // We stop assuming logo lines is of the same length as the info block
 fn safeNextLine(iter: *std.mem.SplitIterator(u8, .sequence)) []const u8 {
     return iter.next() orelse "";
