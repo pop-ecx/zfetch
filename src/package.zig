@@ -14,6 +14,8 @@ pub fn getInstalledPackagesCount(allocator: std.mem.Allocator) !usize {
         return try getDebianPackageCount(allocator);
     } else if (std.mem.eql(u8, distro_family, "fedora") or std.mem.eql(u8, distro_family, "rhel")) {
         return try getFedoraPackageCount(allocator);
+    } else if (std.mem.eql(u8, distro_family, "nixos")) {
+        return try getNixPackageCount(allocator);
     } else {
         return error.UnsupportedDistro;
     }
@@ -86,5 +88,31 @@ fn getFedoraPackageCount(allocator: std.mem.Allocator) !usize {
         }
     }
 
+    return count;
+}
+
+fn getNixPackageCount(allocator: std.mem.Allocator) !usize {
+    var process = std.process.Child.init(&.{ "nix-store", "--query", "--requisites", "/run/current-system" }, allocator);
+
+    process.stdout_behavior = .Pipe;
+    process.stderr_behavior = .Pipe;
+
+    try process.spawn();
+    const stdout = try process.stdout.?.readToEndAlloc(allocator, std.math.maxInt(usize));
+    defer allocator.free(stdout);
+
+    const term = try process.wait();
+    switch (term) {
+        .Exited => |code| if (code != 0) return error.NixCommandFailed,
+        else => return error.NixCommandFailed,
+    }
+
+    var count: usize = 0;
+    var lines = std.mem.splitSequence(u8, stdout, "\n");
+    while (lines.next()) |line| {
+        if (line.len > 0) {
+            count += 1;
+        }
+    }
     return count;
 }
