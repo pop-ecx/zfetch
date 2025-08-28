@@ -1,5 +1,7 @@
 const std = @import("std");
 
+
+// We stop assuming logo lines is of the same length as the info block
 fn safeNextLine(iter: *std.mem.SplitIterator(u8, .sequence)) []const u8 {
     return iter.next() orelse "";
 }
@@ -203,6 +205,20 @@ fn getDistroLogo(distro_name: []const u8) []const u8 {
             \\                           d:
             \\                           -+
             \\                            -
+        },
+        .{
+            "NixOS",
+            \\           _ _       _ _
+            \\        __/ / \_____/ \ \__
+            \\      _/  _/           \_  \_
+            \\     /_  /  _  _____  _  \  _\
+            \\      /_/  / \/  _  \/ \  \_\
+            \\       \_\  \_/\_/ \_/\_/  /_/
+            \\      _/ /               \ \_
+            \\     /__/  __   ___   __  \__\
+            \\       \_  \ \ / _ \ / /  _/
+            \\         \_ \ V / \ V / _/
+            \\           \_/ \_/ \_/
         },
     });
 

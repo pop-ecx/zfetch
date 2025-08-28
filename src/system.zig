@@ -120,3 +120,27 @@ pub fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![
 
     return try result.toOwnedSlice(allocator);
 }
+
+pub fn executeUptimeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![] u8 {
+    var result = std.ArrayListUnmanaged(u8){};
+    defer result.deinit(allocator);
+
+    var child = std.process.Child.init(argv, allocator);
+    child.stdout_behavior = .Pipe;
+    child.stderr_behavior = .Pipe;
+
+    try child.spawn();
+
+    const stdout = try child.stdout.?.readToEndAlloc(allocator, std.math.maxInt(usize));
+    defer allocator.free(stdout);
+
+    try result.appendSlice(allocator, stdout);
+
+    const term = try child.wait();
+    if (term.Exited != 0) {
+        return error.CommandFailed;
+    }
+
+    return result.toOwnedSlice(allocator);
+}
+
