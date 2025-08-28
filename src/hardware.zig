@@ -45,19 +45,81 @@ pub fn getCPUInfo(allocator: std.mem.Allocator) ![]u8 {
 }
 
 pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
-    const lspci_output = try executeCommand(allocator, &[_][]const u8{"lspci"});
-    defer allocator.free(lspci_output);
+    // --- 1. Try lspci ---
+    if (executeCommand(allocator, &[_][]const u8{"lspci"})) |lspci_output| {
+        defer allocator.free(lspci_output);
 
-    // Parse the GPU information
-    var lines = std.mem.splitSequence(u8, lspci_output, "\n");
-    while (lines.next()) |line| {
-        if (std.mem.indexOf(u8, line, "VGA compatible controller:")) |vga_index| {
-            const gpu_info = std.mem.trim(u8, line[vga_index + "VGA compatible controller:".len ..], " ");
-            return try allocator.dupe(u8, gpu_info);
+        var lines = std.mem.splitSequence(u8, lspci_output, "\n");
+        while (lines.next()) |line| {
+            if (std.mem.indexOf(u8, line, "VGA compatible controller:")) |vga_index| {
+                const gpu_info = std.mem.trim(
+                    u8,
+                    line[vga_index + "VGA compatible controller:".len ..],
+                    " "
+                );
+                return try allocator.dupe(u8, gpu_info);
+            }
         }
+    } else |_| {
+        // silently ignore if command missing
     }
 
-    return try allocator.dupe(u8, "Unknown");
+    // --- 2. Try glxinfo ---
+    if (executeCommand(allocator, &[_][]const u8{"glxinfo"})) |glx_output| {
+        defer allocator.free(glx_output);
+
+        var lines = std.mem.splitSequence(u8, glx_output, "\n");
+        while (lines.next()) |line| {
+            if (std.mem.startsWith(u8, line, "OpenGL renderer string:")) {
+                const gpu_info = std.mem.trim(
+                    u8,
+                    line["OpenGL renderer string:".len ..],
+                    " "
+                );
+                return try allocator.dupe(u8, gpu_info);
+            }
+        }
+    } else |_| {}
+
+    // --- 3. Try vulkaninfo ---
+    if (executeCommand(allocator, &[_][]const u8{"vulkaninfo"})) |vk_output| {
+        defer allocator.free(vk_output);
+
+        var lines = std.mem.splitSequence(u8, vk_output, "\n");
+        while (lines.next()) |line| {
+            if (std.mem.indexOf(u8, line, "deviceName")) |idx| {
+                const gpu_info = std.mem.trim(
+                    u8,
+                    line[idx + "deviceName".len ..],
+                    " :\t"
+                );
+                return try allocator.dupe(u8, gpu_info);
+            }
+        }
+    } else |_| {}
+
+    // --- 4. Try sysfs (/sys/class/drm) ---
+    if (std.fs.cwd().openFile("/sys/class/drm/card0/device/vendor", .{})) |vendor_file| {
+        defer vendor_file.close();
+        if (std.fs.cwd().openFile("/sys/class/drm/card0/device/device", .{})) |device_file| {
+            defer device_file.close();
+
+            const vendor = try vendor_file.readToEndAlloc(allocator, 16);
+            defer allocator.free(vendor);
+            const device = try device_file.readToEndAlloc(allocator, 16);
+            defer allocator.free(device);
+
+            const combined = try std.fmt.allocPrint(
+                allocator,
+                "PCI Vendor: {s}, Device: {s}",
+                .{ std.mem.trim(u8, vendor, "\n "), std.mem.trim(u8, device, "\n ") }
+            );
+            return combined;
+        } else |_| {}
+    } else |_| {}
+
+    // --- Fallback ---
+    return try allocator.dupe(u8, "Unknown GPU");
 }
 
 fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]const u8 {
