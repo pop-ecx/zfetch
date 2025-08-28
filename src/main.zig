@@ -55,7 +55,14 @@ pub fn main() !void {
     const shell_version = try system.getShellVersion(allocator);
     defer allocator.free(shell_version);
 
-    const uptime = try system.executeCommand(allocator, &[_][]const u8{ "uptime", "-p" });
+    const uptime = system.executeUptimeCommand(allocator, &[_][]const u8{ "uptime", "-p" }) catch |err| blk: {
+        // Because NixOS does not have a -p
+        if (err == error.CommandFailed) {
+            break :blk try system.executeUptimeCommand(allocator, &[_][]const u8{ "uptime" });
+        } else {
+            return err;
+        }
+    };
     defer allocator.free(uptime);
 
     //read hardware model
