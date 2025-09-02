@@ -24,7 +24,7 @@ pub fn printNeofetchStyle(
     color: []const u8,
 ) !void {
     const logo = getDistroLogo(distro_name);
-
+    const key_color = "\x1b[38;2;135;206;250m";
     const blue = "\x1b[38;2;135;206;250m";
     const bold = "\x1b[1m";
     const reset = "\x1b[0m";
@@ -34,19 +34,19 @@ pub fn printNeofetchStyle(
     std.debug.print("{s}{s:<60}{s} {s}{s}{s}{s}\n", .{ color, safeNextLine(&logo_lines), reset, blue, bold, user_at_hostname, reset });
     std.debug.print("{s}{s:<60}{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, "-----------------" });
 
-    std.debug.print("{s}{s:<60}{s} {s}Distro: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, distro_name });
-    std.debug.print("{s}{s:<60}{s} {s}DE/WM: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, desktop_env });
-    std.debug.print("{s}{s:<60}{s} {s}Kernel Version: {s}", .{ color, safeNextLine(&logo_lines), reset, bold, kernel_version });
-    std.debug.print("{s}{s:<60}{s} {s}Uptime: {s}", .{ color, safeNextLine(&logo_lines), reset, bold, uptime });
-    std.debug.print("{s}{s:<60}{s} {s}Shell: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, shell_version });
-    std.debug.print("{s}{s:<60}{s} {s}Packages: {}\n", .{ color, safeNextLine(&logo_lines), reset, bold, package_count });
-    std.debug.print("{s}{s:<60}{s} {s}Hardware Model: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, hardware_model });
-    std.debug.print("{s}{s:<60}{s} {s}CPU: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, cpu });
-    std.debug.print("{s}{s:<60}{s} {s}GPU: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, gpu });
-    std.debug.print("{s}{s:<60}{s} {s}Terminal: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, terminal_name });
-    std.debug.print("{s}{s:<60}{s} {s}Theme: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, theme });
-    std.debug.print("{s}{s:<60}{s} {s}Icons: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, icons });
-    std.debug.print("{s}{s:<60}{s} {s}Memory: {s}\n", .{ color, safeNextLine(&logo_lines), reset, bold, memory_info });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Distro:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, distro_name });
+    std.debug.print("{s}{s:<60}{s} {s}{s}DE/WM:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, desktop_env });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Kernel Version:{s} {s}", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, kernel_version });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Uptime:{s} {s}", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, uptime });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Shell:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, shell_version });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Packages:{s} {}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, package_count });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Hardware Model:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, hardware_model });
+    std.debug.print("{s}{s:<60}{s} {s}{s}CPU:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, cpu });
+    std.debug.print("{s}{s:<60}{s} {s}{s}GPU:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset,key_color, bold, reset, gpu });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Terminal:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, terminal_name });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Theme:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, theme });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Icons:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, icons });
+    std.debug.print("{s}{s:<60}{s} {s}{s}Memory:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, memory_info });
 
     // print remaining logo lines (if longer than info block)
     while (logo_lines.next()) |logo_line| {
@@ -57,9 +57,10 @@ pub fn printNeofetchStyle(
 
 fn printColorGrid() void {
     const colors = [_]u8{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+    std.debug.print("{s:<60} ", .{""});
     for (colors) |color| {
         std.debug.print("\x1b[48;5;{d}m  \x1b[0m", .{color});
-        std.debug.print(" ", .{});
+        std.debug.print("", .{});
     }
     std.debug.print("\n", .{});
 }
