@@ -1,6 +1,5 @@
 const std = @import("std");
 
-
 // We stop assuming logo lines is of the same length as the info block
 fn safeNextLine(iter: *std.mem.SplitIterator(u8, .sequence)) []const u8 {
     return iter.next() orelse "";
@@ -42,7 +41,7 @@ pub fn printNeofetchStyle(
     std.debug.print("{s}{s:<60}{s} {s}{s}Packages:{s} {}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, package_count });
     std.debug.print("{s}{s:<60}{s} {s}{s}Hardware Model:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, hardware_model });
     std.debug.print("{s}{s:<60}{s} {s}{s}CPU:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, cpu });
-    std.debug.print("{s}{s:<60}{s} {s}{s}GPU:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset,key_color, bold, reset, gpu });
+    std.debug.print("{s}{s:<60}{s} {s}{s}GPU:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, gpu });
     std.debug.print("{s}{s:<60}{s} {s}{s}Terminal:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, terminal_name });
     std.debug.print("{s}{s:<60}{s} {s}{s}Theme:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, theme });
     std.debug.print("{s}{s:<60}{s} {s}{s}Icons:{s} {s}\n", .{ color, safeNextLine(&logo_lines), reset, key_color, bold, reset, icons });

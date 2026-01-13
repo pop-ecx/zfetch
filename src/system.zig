@@ -121,7 +121,7 @@ pub fn executeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![
     return try result.toOwnedSlice(allocator);
 }
 
-pub fn executeUptimeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![] u8 {
+pub fn executeUptimeCommand(allocator: std.mem.Allocator, argv: []const []const u8) ![]u8 {
     var result = std.ArrayListUnmanaged(u8){};
     defer result.deinit(allocator);
 
@@ -143,4 +143,3 @@ pub fn executeUptimeCommand(allocator: std.mem.Allocator, argv: []const []const 
 
     return result.toOwnedSlice(allocator);
 }
-

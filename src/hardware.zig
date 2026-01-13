@@ -52,11 +52,7 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
         var lines = std.mem.splitSequence(u8, lspci_output, "\n");
         while (lines.next()) |line| {
             if (std.mem.indexOf(u8, line, "VGA compatible controller:")) |vga_index| {
-                const gpu_info = std.mem.trim(
-                    u8,
-                    line[vga_index + "VGA compatible controller:".len ..],
-                    " "
-                );
+                const gpu_info = std.mem.trim(u8, line[vga_index + "VGA compatible controller:".len ..], " ");
                 return try allocator.dupe(u8, gpu_info);
             }
         }
@@ -71,11 +67,7 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
         var lines = std.mem.splitSequence(u8, glx_output, "\n");
         while (lines.next()) |line| {
             if (std.mem.startsWith(u8, line, "OpenGL renderer string:")) {
-                const gpu_info = std.mem.trim(
-                    u8,
-                    line["OpenGL renderer string:".len ..],
-                    " "
-                );
+                const gpu_info = std.mem.trim(u8, line["OpenGL renderer string:".len..], " ");
                 return try allocator.dupe(u8, gpu_info);
             }
         }
@@ -88,11 +80,7 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
         var lines = std.mem.splitSequence(u8, vk_output, "\n");
         while (lines.next()) |line| {
             if (std.mem.indexOf(u8, line, "deviceName")) |idx| {
-                const gpu_info = std.mem.trim(
-                    u8,
-                    line[idx + "deviceName".len ..],
-                    " :\t"
-                );
+                const gpu_info = std.mem.trim(u8, line[idx + "deviceName".len ..], " :\t");
                 return try allocator.dupe(u8, gpu_info);
             }
         }
@@ -109,11 +97,7 @@ pub fn getGPUInfo(allocator: std.mem.Allocator) ![]u8 {
             const device = try device_file.readToEndAlloc(allocator, 16);
             defer allocator.free(device);
 
-            const combined = try std.fmt.allocPrint(
-                allocator,
-                "PCI Vendor: {s}, Device: {s}",
-                .{ std.mem.trim(u8, vendor, "\n "), std.mem.trim(u8, device, "\n ") }
-            );
+            const combined = try std.fmt.allocPrint(allocator, "PCI Vendor: {s}, Device: {s}", .{ std.mem.trim(u8, vendor, "\n "), std.mem.trim(u8, device, "\n ") });
             return combined;
         } else |_| {}
     } else |_| {}
