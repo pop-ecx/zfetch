@@ -58,7 +58,7 @@ pub fn main() !void {
     const uptime = system.executeUptimeCommand(allocator, &[_][]const u8{ "uptime", "-p" }) catch |err| blk: {
         // Because NixOS does not have a -p
         if (err == error.CommandFailed) {
-            break :blk try system.executeUptimeCommand(allocator, &[_][]const u8{ "uptime" });
+            break :blk try system.executeUptimeCommand(allocator, &[_][]const u8{"uptime"});
         } else {
             return err;
         }
