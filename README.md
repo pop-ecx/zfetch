@@ -18,6 +18,7 @@ This is not in any repo, so to install
 - cd into the repo
 - run `zig build`
 
+> I recommend installing from source as the binaries will always be slightly out of date.
 You can also download pre-built binaries from the releases page
 
 
